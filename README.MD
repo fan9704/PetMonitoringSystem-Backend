@@ -9,6 +9,8 @@
 
 ## Software Development Lifecycle
 
+![](./doc/scrum.png)
+
 ---
 
 [Swagger Route](127.0.0.1:8000/swagger/)
