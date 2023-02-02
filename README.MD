@@ -45,6 +45,13 @@ POSTGRES_PASSWORD =
 POSTGRES_DB_URL =
 #ChatGPT
 CHATGPT_APIKEY = 
+#RabbitMQ
+RABBITMQ_ENABLE = 
+RABBITMQ_USERNAME = 
+RABBITMQ_PASSWORD = 
+RABBITMQ_SERVER_IP = 
+RABBITMQ_PORT = 
+RABBITMQ_VIRTUAL_HOST = 
 ```
 
 ### Step.4 Migrate Schema to PostgreSQL
@@ -99,4 +106,12 @@ pip install -r requirements.txt
 
 ```shell
 pip freeze > requirements.txt
+```
+
+### Run Integration Test
+
+```shell
+python manage.py test api/tests/models --pattern="*Test.py" [--verbosity 2]# Unit Test --verbosity 2 is output detail
+python manage.py test --pattern="*Test.py" #Intergration Test
+python manage.py test  #Intergration Test
 ```

@@ -22,6 +22,8 @@ drf-yasg = "*"
 django-cors-headers = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+pika = "*"
+#openai = "*"
 
 [dev-packages]
 
