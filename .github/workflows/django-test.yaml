@@ -1,0 +1,46 @@
+name: Pet Monitoring Backend Development CI Pipeline
+
+on:
+    workflow_call:
+    workflow_dispatch:
+    push:
+       branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+  simple_build:
+    runs-on: ubuntu-latest
+    env:
+        DJANGO_SECRET_KEY: "erqwer23"
+        PYTHON_VERSION: "3.9"
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Docker Compose Action
+        uses: isbang/compose-action@v1.4.1
+        with:
+          compose-file: "./docker-compose.yml"
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v2
+        with:
+           python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install pipenv
+        run: pip install pipenv
+      - name: Install Dependencies from pipenv
+        run: |
+            pipenv install
+      - name: Django Make Migration Checking
+        run: |
+            pipenv run python manage.py makemigrations
+      - name: Create Elasticsearch Index
+        run: |
+            pipenv run python manage.py search_index --create
+      - name: Django Migrate Database to postgresql
+        run: |
+            pipenv run python manage.py migrate
+      - name: Run tests
+        run: |
+            pipenv run python manage.py test
