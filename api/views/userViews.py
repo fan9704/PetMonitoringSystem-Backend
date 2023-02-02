@@ -171,6 +171,15 @@ class EditProfileAPI(APIView):
             return Response(userResponseConverter(user), status=status.HTTP_200_OK)
 
 
+class UserAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        userQuery = User.objects.all()
+        userList = []
+        for i in userQuery:
+            userList.append(userResponseConverter(i))
+        return Response(userList, status=status.HTTP_200_OK)
+
+
 def userResponseConverter(user):
     if user is not None:
         result = dict(
