@@ -144,3 +144,13 @@ ELASTICSEARCH_DSL = {
         'hosts': os.getenv("ELASTICSEARCH_ENDPOINT", "127.0.0.1:9200")
     },
 }
+
+# RabbitMQ Config
+RABBITMQ_CONFIG = {
+    "enable": os.getenv("RABBITMQ_ENABLE", False),
+    "username": os.getenv("RABBITMQ_USERNAME", "guest"),
+    "password": os.getenv("RABBITMQ_PASSWORD", "guest"),
+    "serverip": os.getenv("RABBITMQ_SERVER_IP", "127.0.0.1"),
+    "port": os.getenv("RABBITMQ_PORT", "5672"),
+    "vhost": os.getenv("RABBITMQ_VIRTUAL_HOST", "/")
+}
