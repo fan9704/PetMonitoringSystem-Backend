@@ -29,9 +29,13 @@ jobs:
            python-version: ${{ env.PYTHON_VERSION }}
       - name: Install pipenv
         run: pip install pipenv
+
       - name: Install Dependencies from pipenv
         run: |
-            pipenv install
+            pipenv install \
+            pipenv install -r requirements.txt
+          
+
       - name: Django Make Migration Checking
         run: |
             pipenv run python manage.py makemigrations
@@ -41,6 +45,15 @@ jobs:
       - name: Django Migrate Database to postgresql
         run: |
             pipenv run python manage.py migrate
-      - name: Run tests
+          
+      - name: Run Unit Tests
+        run: |
+            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
+
+      - name: Run Integration Tests
+        run: |
+            pipenv run python manage.py test --pattern="*Test.py" --verbosity 2
+
+      - name: Run System Tests
         run: |
             pipenv run python manage.py test
