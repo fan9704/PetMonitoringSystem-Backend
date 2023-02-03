@@ -32,9 +32,8 @@ jobs:
 
       - name: Install Dependencies from pipenv
         run: |
-            pipenv install \
-            pipenv install -r requirements.txt
-          
+            pipenv install 
+      - run : pipenv install openai
 
       - name: Django Make Migration Checking
         run: |
