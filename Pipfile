@@ -23,7 +23,7 @@ django-cors-headers = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 pika = "*"
-#openai = "*"
+openai = "*"
 
 [dev-packages]
 

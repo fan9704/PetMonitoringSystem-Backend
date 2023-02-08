@@ -72,6 +72,12 @@ pipenv run python manage.py search_index --create
 pipenv run python manage.py runserver 0.0.0.0:8000
 ```
 
+### Step.7 Run Commands
+
+```shell
+pipenv run python manage.py recordListener
+```
+
 ----
 
 ## Other
