@@ -4,6 +4,15 @@
 
 1. [Python Pika RabbitMQ 6 Implementation mode](https://www.cnblogs.com/guyuyun/p/14970592.html)
 2. [Docker Compose for RabbitMQ](https://hackmd.io/@sfRJH1u7S464tSaizL7ZsQ/r1one4Rxu)
+3. [Deal with Threading Conflict in Django](https://blog.csdn.net/luslin1711/article/details/87885145)
+
+### Celery
+
+
+Test Info
+```shell
+Celery -A PetMonitoringSystemBackend worker -l info
+```
 
 ## Django 
 

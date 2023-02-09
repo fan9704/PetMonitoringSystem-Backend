@@ -4,13 +4,29 @@ on:
     workflow_call:
     workflow_dispatch:
     push:
-       branches: [main]
+       branches: [master]
     pull_request:
-        branches: [main]
+        branches: [master]
 
 jobs:
   simple_build:
     runs-on: ubuntu-latest
+    container: node:latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: PET
+          POSTGRES_PASSWORD: 123456
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
         DJANGO_SECRET_KEY: "erqwer23"
         PYTHON_VERSION: "3.9"
@@ -19,28 +35,53 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Docker Compose Action
-        uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: "./docker-compose.yml"
+#      - name: Docker Compose Action
+#        uses: isbang/compose-action@v1.4.1
+#      - with:
+#          stack-version: 7.6.0
+#        with:
+#          compose-file: "./docker-compose.yml"
+      - name: Configure sysctl limits
+        run: |
+          sudo swapoff -a
+          sudo sysctl -w vm.swappiness=1
+          sudo sysctl -w fs.file-max=262144
+          sudo sysctl -w vm.max_map_count=262144
+
+      - name: Runs Elasticsearch
+        uses: elastic/elastic-github-actions/elasticsearch@master
+
       - name: Setup Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v2
         with:
            python-version: ${{ env.PYTHON_VERSION }}
       - name: Install pipenv
         run: pip install pipenv
+
       - name: Install Dependencies from pipenv
         run: |
-            pipenv install
+            pipenv install 
+      - run : pipenv install openai
+
       - name: Django Make Migration Checking
         run: |
             pipenv run python manage.py makemigrations
-      - name: Create Elasticsearch Index
-        run: |
-            pipenv run python manage.py search_index --create
       - name: Django Migrate Database to postgresql
         run: |
             pipenv run python manage.py migrate
-      - name: Run tests
+      - name: Create Elasticsearch Index
+        run: |
+            pipenv run python manage.py search_index --create
+        
+
+      - name: Run Unit Tests
+        run: |
+            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
+
+      - name: Run Integration Tests
+        run: |
+            pipenv run python manage.py test --pattern="*Test.py" --verbosity 2
+
+      - name: Run System Tests
         run: |
             pipenv run python manage.py test
