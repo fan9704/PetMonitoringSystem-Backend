@@ -9,8 +9,6 @@ from rest_framework import status, viewsets, mixins, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from PetMonitoringSystemBackend.pikaSettings import RabbitmqClient
-from PetMonitoringSystemBackend.settings import RABBITMQ_CONFIG
 from api import models
 from api.serializers import PetSerializer, PetTypeSerializer
 
@@ -114,13 +112,3 @@ def petTypeResponseConverter(petType: models.PetType):
     else:
         result = ""
     return result
-
-
-def callback(ch, method, properties, body):
-    print("[Consumer] Received ", body.decode(encoding='utf-8'))
-    # time.sleep(1)
-    # ch.basic_ack(delivery_tag=method.delivery_tag)
-
-
-if RABBITMQ_CONFIG["enable"]:
-    RabbitmqClient.expense("hello", callback)
