@@ -154,3 +154,8 @@ RABBITMQ_CONFIG = {
     "port": os.getenv("RABBITMQ_PORT", "5672"),
     "vhost": os.getenv("RABBITMQ_VIRTUAL_HOST", "/")
 }
+# chatBot Config
+CHATGPT_CONFIG={
+    "enable":os.getenv("CHATGPT_ENABLE",False),
+    "api_key":os.getenv("CHATGPT_APIKEY",None)
+}
