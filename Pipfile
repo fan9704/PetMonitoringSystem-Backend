@@ -24,6 +24,7 @@ python-dotenv = "*"
 psycopg2-binary = "*"
 pika = "*"
 openai = "*"
+django-health-check = "*"
 
 [dev-packages]
 
