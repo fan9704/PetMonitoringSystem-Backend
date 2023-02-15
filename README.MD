@@ -54,6 +54,10 @@ RABBITMQ_PASSWORD =
 RABBITMQ_SERVER_IP = 
 RABBITMQ_PORT = 
 RABBITMQ_VIRTUAL_HOST = 
+#Celery
+BROKER_URL =
+#Redis
+REDIS_URL=
 ```
 
 ### Step.4 Migrate Schema to PostgreSQL
