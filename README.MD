@@ -13,7 +13,9 @@
 
 ---
 
-[Swagger Route](127.0.0.1:8000/swagger/)
+[Swagger Route](http://127.0.0.1:8000/swagger/)
+
+[Django System Check](http://127.0.0.1:8000/health/)
 
 ## Setup Project
 
@@ -52,6 +54,10 @@ RABBITMQ_PASSWORD =
 RABBITMQ_SERVER_IP = 
 RABBITMQ_PORT = 
 RABBITMQ_VIRTUAL_HOST = 
+#Celery
+BROKER_URL =
+#Redis
+REDIS_URL=
 ```
 
 ### Step.4 Migrate Schema to PostgreSQL

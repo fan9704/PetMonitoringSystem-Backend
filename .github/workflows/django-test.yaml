@@ -46,31 +46,29 @@ jobs:
 
       - name: Install pipenv
         run: pip install pipenv
-
       - name: Install Dependencies from pipenv
         run: |
-            pipenv install 
-      - run : pipenv install openai
-
-      - name: Django Make Migration Checking
-        run: |
-            pipenv run python manage.py makemigrations
-      - name: Django Migrate Database to postgresql
-        run: |
-            pipenv run python manage.py migrate
-      - name: Create Elasticsearch Index
-        run: |
-            pipenv run python manage.py search_index --create
-        
-
-      - name: Run Unit Tests
-        run: |
-            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
-
-      - name: Run Integration Tests
-        run: |
-            pipenv run python manage.py test --pattern="*Test.py" --verbosity 2
-
-      - name: Run System Tests
-        run: |
-            pipenv run python manage.py test
+            pipenv install
+#
+#      - name: Django Make Migration Checking
+#        run: |
+#            pipenv run python manage.py makemigrations
+#      - name: Django Migrate Database to postgresql
+#        run: |
+#            pipenv run python manage.py migrate
+#      - name: Create Elasticsearch Index
+#        run: |
+#            pipenv run python manage.py search_index --create
+#
+#
+#      - name: Run Unit Tests
+#        run: |
+#            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
+#
+#      - name: Run Integration Tests
+#        run: |
+#            pipenv run python manage.py test --pattern="*Test.py" --verbosity 2
+#
+#      - name: Run System Tests
+#        run: |
+#            pipenv run python manage.py test

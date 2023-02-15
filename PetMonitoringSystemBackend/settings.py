@@ -49,8 +49,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_elasticsearch_dsl',
-    "corsheaders",
-    "drf_yasg",
+    'corsheaders',
+    'django_redis',
+    'drf_yasg',
+
+    'health_check',  # required
+    'health_check.db',  # stock Django health checkers
+    'health_check.cache',
+    'health_check.storage',
+    'health_check.contrib.migrations',
+    'health_check.contrib.rabbitmq',  # requires RabbitMQ broker
+    'health_check.contrib.redis',  # requires Redis
+
     'api',
 ]
 
@@ -154,8 +164,25 @@ RABBITMQ_CONFIG = {
     "port": os.getenv("RABBITMQ_PORT", "5672"),
     "vhost": os.getenv("RABBITMQ_VIRTUAL_HOST", "/")
 }
+BROKER_URL = f'amqp://{RABBITMQ_CONFIG["username"]}:{RABBITMQ_CONFIG["password"]}@{RABBITMQ_CONFIG["serverip"]}:{RABBITMQ_CONFIG["port"]}{RABBITMQ_CONFIG["vhost"]}'
+
 # chatBot Config
-CHATGPT_CONFIG={
-    "enable":os.getenv("CHATGPT_ENABLE",False),
-    "api_key":os.getenv("CHATGPT_APIKEY",None)
+CHATGPT_CONFIG = {
+    "enable": os.getenv("CHATGPT_ENABLE", False),
+    "api_key": os.getenv("CHATGPT_APIKEY", None)
 }
+
+# Redis Cache
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{os.getenv('REDIS_URL', '127.0.0.1:6379')}/1",
+        # 1 is Database Number
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        'KEY_PREFIX': 'Cache'
+    },
+}
+REDIS_URL = CACHES["default"]["LOCATION"]

@@ -17,3 +17,11 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ## Django 
 
 1. [Django 6 Way to implement API](https://medium.com/djangotube/django-rest-api-curd-example-61c3a29b22ed)
+
+### Django Health Check 
+
+1. [Django Health RabbitMQ Redis](https://ithelp.ithome.com.tw/articles/10235145)
+
+### Django Redis
+
+1. [Django-Redis Cache](https://ithelp.ithome.com.tw/articles/10256463)
