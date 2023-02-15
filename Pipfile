@@ -25,6 +25,7 @@ psycopg2-binary = "*"
 pika = "*"
 openai = "*"
 django-health-check = "*"
+django-redis = "*"
 
 [dev-packages]
 
