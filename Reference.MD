@@ -21,3 +21,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Django Health Check 
 
 1. [Django Health RabbitMQ Redis](https://ithelp.ithome.com.tw/articles/10235145)
+
+### Django Redis
+
+1. [Django-Redis Cache](https://ithelp.ithome.com.tw/articles/10256463)
