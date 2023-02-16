@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
-from api.models import Pet, PetType
+from api.models import Pet, PetType, Record
 
 
 @registry.register_document
@@ -71,4 +71,51 @@ class PetES(Document):
             'name',
             'birthday',
             'content',
+        ]
+
+
+@registry.register_document
+class RecordES(Document):
+    pet = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'name': fields.TextField(),
+        'keeper': fields.ObjectField(properties={
+            'id': fields.IntegerField(),
+            'first_name': fields.TextField(),
+            'last_name': fields.TextField(),
+            'username': fields.TextField(),
+        }),
+        'type': fields.ObjectField(properties={
+            'id': fields.IntegerField(),
+            'typename': fields.TextField(),
+            'description': fields.TextField(),
+        }),
+        'birthday': fields.DateField(),
+        'content': fields.TextField(),
+    }),
+    type = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'type': fields.TextField(),
+    }),
+    data = fields.FloatField(),
+    machine = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'name': fields.TextField(),
+    })
+
+    class Index:
+        name = 'record'
+        settings = {
+            'number_of_shards': 1,
+            'number_of_replicas': 0,
+        }
+
+    class Django:
+        model = Record
+        fields = [
+            'id',
+            'pet',
+            'type',
+            'data',
+            'machine'
         ]
