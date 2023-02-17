@@ -33,7 +33,7 @@ class PetRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PetSerializer
 
 
-class PetCLAPIView(generics.ListCreateAPIView):
+class PetListView(generics.ListAPIView):
     queryset = models.Pet.objects.all()
     serializer_class = PetSerializer
 
@@ -76,8 +76,8 @@ class PetCreateAPIView(APIView):
 
             pet = models.Pet.objects.create(
                 name=name,
-                keeper_id=keeper,
-                type_id=petType,
+                keeper=keeper,
+                type=petType,
                 birthday=birthday,
                 content=content
             )

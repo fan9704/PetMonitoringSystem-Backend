@@ -114,8 +114,8 @@ class RecordES(Document):
         model = Record
         fields = [
             'id',
-            'pet',
-            'type',
+            # 'pet',
+            # 'type',
             'data',
-            'machine'
+            # 'machine'
         ]
