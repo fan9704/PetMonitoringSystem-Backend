@@ -34,14 +34,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Docker Compose
-        run: sudo apt install docker |
-              sudo apt install docker-compose
-
       - name: Docker Compose Action
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "./docker-compose.yml"
+
 
       - name: Setup Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v2
