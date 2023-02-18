@@ -19,3 +19,18 @@ class Pet(models.Model):
 
     def __str__(self):
         return f'{self.name}  照顧人 {self.keeper.username}:   寵物種類{self.type.typename}'
+
+
+class Machine(models.Model):
+    name = models.CharField(max_length=255)
+
+
+class RecordType(models.Model):
+    type = models.CharField(max_length=255)
+
+
+class Record(models.Model):
+    pet = models.ForeignKey(to=Pet, on_delete=models.CASCADE)
+    type = models.ForeignKey(to=RecordType, on_delete=models.CASCADE)
+    data = models.FloatField(null=True, blank=True)
+    machine = models.ForeignKey(to=Machine, on_delete=models.CASCADE)
