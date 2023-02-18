@@ -17,6 +17,8 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ## Django 
 
 1. [Django 6 Way to implement API](https://medium.com/djangotube/django-rest-api-curd-example-61c3a29b22ed)
+2. [Docker Container Django](https://saadali18.medium.com/learn-docker-with-easy-implementation-in-python-django-application-82df50f351a9)
+3. [Forest Admin Django](https://medium.com/forest-admin/forest-admin-django-admin-alternative-f71b3864ed65)
 
 ### Django Health Check 
 
