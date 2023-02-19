@@ -17,6 +17,8 @@
 
 [Django System Check](http://127.0.0.1:8000/health/)
 
+[Forest Admin](https://app.forestadmin.com/)
+
 ## Setup Project
 
 ### Step.1 Install Dependencies with pipenv
