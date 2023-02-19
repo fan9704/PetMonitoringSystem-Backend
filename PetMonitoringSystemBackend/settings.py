@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django_redis',
     'drf_yasg',
 
+    'django_forest',
+
     'health_check',  # required
     'health_check.db',  # stock Django health checkers
     'health_check.cache',
@@ -186,3 +188,11 @@ CACHES = {
     },
 }
 REDIS_URL = CACHES["default"]["LOCATION"]
+
+# Django Forest admin Setting
+FOREST = {
+   'FOREST_URL': 'https://api.forestadmin.com',
+   'FOREST_ENV_SECRET': '202fd064512fcbc0e102916447dc9f4bfc8e12fed2117a9f6e3a6b9a9ff0f068',
+   'FOREST_AUTH_SECRET': '4286aaa109e3eefc73839de1b494178b10654f3fd4aefab0'
+}
+APPEND_SLASH=False
