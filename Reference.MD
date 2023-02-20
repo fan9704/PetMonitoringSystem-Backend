@@ -27,3 +27,8 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Django Redis
 
 1. [Django-Redis Cache](https://ithelp.ithome.com.tw/articles/10256463)
+
+### Django Logging
+
+1. [Django Logstash push logging to Kibana](https://www.mls-tech.info/python/python-django-logging-to-elk/)
+2. [Python Logger](https://www.cnblogs.com/jesse123/p/14135551.html)
