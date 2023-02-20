@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import logstash
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,27 +131,18 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = 'zh-TW'
-
 TIME_ZONE = 'Asia/Taipei'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# Elasticsearch DSL Configuration
 ELASTICSEARCH_DSL = {
     'default': {
         'hosts': os.getenv("ELASTICSEARCH_ENDPOINT", "127.0.0.1:9200")
@@ -191,8 +183,34 @@ REDIS_URL = CACHES["default"]["LOCATION"]
 
 # Django Forest admin Setting
 FOREST = {
-   'FOREST_URL': 'https://api.forestadmin.com',
-   'FOREST_ENV_SECRET': '202fd064512fcbc0e102916447dc9f4bfc8e12fed2117a9f6e3a6b9a9ff0f068',
-   'FOREST_AUTH_SECRET': '4286aaa109e3eefc73839de1b494178b10654f3fd4aefab0'
+    'FOREST_URL': os.getenv("FOREST_URL", 'https://api.forestadmin.com'),
+    'FOREST_ENV_SECRET': os.getenv("FOREST_ENV_SECRET", None),
+    'FOREST_AUTH_SECRET': os.getenv("FOREST_AUTH_SECRET", None)
 }
-APPEND_SLASH=False
+APPEND_SLASH = False
+
+# Logstash Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'logstash': {
+            'level': 'DEBUG',
+            'class': 'logstash.TCPLogstashHandler',
+            'host': os.getenv("LOGSTASH_SERVER_IP", 'localhost'),
+            'port': os.getenv("LOGSTASH_PORT", 5000),  # Default value: 5959
+            'version': 1,
+            # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+            'message_type': 'django',  # 'type' field in logstash message. Default value: 'logstash'.
+            'fqdn': False,  # Fully qualified domain name. Default value: false.
+            'tags': ['django.request'],  # list of tags. Default: None.
+        }
+    },
+    'root': {
+        'handlers': ['console', 'logstash'],
+        'level': 'DEBUG',
+    },
+}
