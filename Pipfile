@@ -28,6 +28,7 @@ django-health-check = "*"
 django-redis = "*"
 django-forestadmin = "*"
 python-logstash = "*"
+channels = "*"
 
 [dev-packages]
 
