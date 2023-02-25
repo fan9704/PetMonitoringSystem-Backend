@@ -6,6 +6,20 @@
 2. [Docker Compose for RabbitMQ](https://hackmd.io/@sfRJH1u7S464tSaizL7ZsQ/r1one4Rxu)
 3. [Deal with Threading Conflict in Django](https://blog.csdn.net/luslin1711/article/details/87885145)
 
+### Install Plugins for MQTT
+
+```shell
+docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_mqtt
+docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_web_mqtt
+docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_web_stomp
+```
+
+### Install RabbitMQ Management
+
+```shell
+docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_management
+```
+
 ### Celery
 
 
@@ -32,3 +46,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 
 1. [Django Logstash push logging to Kibana](https://www.mls-tech.info/python/python-django-logging-to-elk/)
 2. [Python Logger](https://www.cnblogs.com/jesse123/p/14135551.html)
+
+### Django Websocket
+
+1. [Channels Chatroom](https://zhuanlan.zhihu.com/p/373801436)

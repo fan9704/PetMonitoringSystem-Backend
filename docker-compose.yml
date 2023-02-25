@@ -73,6 +73,10 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+      - "1883:1883"
+      - "61613:61613"
+      - "15674:15674"
+      - "15675:15675"
   redis:
     restart: always
     container_name: redis
