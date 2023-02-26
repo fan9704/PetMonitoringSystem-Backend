@@ -29,6 +29,7 @@ django-redis = "*"
 django-forestadmin = "*"
 python-logstash = "*"
 channels = "*"
+paho-mqtt = "*"
 
 [dev-packages]
 
