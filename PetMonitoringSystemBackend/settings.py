@@ -53,8 +53,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_redis',
     'drf_yasg',
+    'channels',
 
     'django_forest',
+    # 'django_prometheus',
 
     'health_check',  # required
     'health_check.db',  # stock Django health checkers
@@ -65,16 +67,19 @@ INSTALLED_APPS = [
     'health_check.contrib.redis',  # requires Redis
 
     'api',
+    'ws',
 ]
 
 MIDDLEWARE = [
+    # 'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django_prometheus.middleware.PrometheusAfterMiddleware'
 ]
 
 ROOT_URLCONF = 'PetMonitoringSystemBackend.urls'
@@ -96,7 +101,19 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'PetMonitoringSystemBackend.wsgi.application'
+ASGI_APPLICATION = 'PetMonitoringSystemBackend.asgi.application'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [f"redis://{os.getenv('REDIS_HOST', '127.0.0.1')}:{os.getenv('REDIS_PORT', 6379)}/2"],
+        },
+    },
+    "memory": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -171,7 +188,7 @@ CHATGPT_CONFIG = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{os.getenv('REDIS_URL', '127.0.0.1:6379')}/1",
+        "LOCATION": f"redis://{os.getenv('REDIS_HOST', '127.0.0.1')}:{os.getenv('REDIS_PORT', ':6379')}/1",
         # 1 is Database Number
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",

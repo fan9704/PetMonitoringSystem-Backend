@@ -1,0 +1,9 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'django App'
+    metrics_path: '/metrics/metrics/'
+    static_configs:
+      - targets: ["localhost:8001"]

@@ -50,3 +50,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Django Websocket
 
 1. [Channels Chatroom](https://zhuanlan.zhihu.com/p/373801436)
+
+### Django Grafana Prometheus
+
+1. [Implement Grafana Prometheus on Django](https://karanchuri.medium.com/prometheus-grafana-in-django-92da4d782f8a)
