@@ -33,11 +33,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Docker Compose Action
-        uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: "./docker-compose.yml"
+#
+#      - name: Docker Compose Action
+#        uses: isbang/compose-action@v1.4.1
+#        with:
+#          compose-file: "./docker-compose.yml"
 
 
       - name: Setup Python ${{ env.PYTHON_VERSION }}
