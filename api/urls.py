@@ -3,6 +3,7 @@ from django.urls import path
 from api.views.gptViews import AdviceAPIView
 from api.views.userViews import Register, LoginAPI, LogoutAPI, EditProfileAPI,UserAPIView
 from api.views.petViews import PetTypeRUDAPIView, PetTypeCLAPIView, PetRUDAPIView, PetListView, PetCreateAPIView
+from api.views.machineViews import MachineListView, MachineRUDAPIView
 
 urlpatterns = [
     # Account Routes
@@ -20,4 +21,8 @@ urlpatterns = [
     path('pet/', PetCreateAPIView.as_view()),
     # Advice Routes
     path('advice/', AdviceAPIView.as_view()),
+
+    # Nachine Routes
+    path('machine/<int:pk>/', MachineRUDAPIView.as_view()),
+    path('machine/list', MachineListView.as_view()),
 ]
