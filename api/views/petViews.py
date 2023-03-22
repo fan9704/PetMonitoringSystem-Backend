@@ -38,6 +38,13 @@ class PetListView(generics.ListAPIView):
     serializer_class = PetSerializer
 
 
+class PetQueryListView(APIView):
+    def get(self, request, pet_type):
+        pets = models.Pet.objects.filter(type__typename=pet_type)
+        serializer = PetSerializer(pets, many=True)
+        return Response(serializer.data)
+
+
 class PetCreateAPIView(APIView):
     @swagger_auto_schema(
         operation_summary='Create Pet',
