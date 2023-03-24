@@ -29,15 +29,15 @@ jobs:
 #          --health-retries 5
     env:
         DJANGO_SECRET_KEY: "erqwer23"
-        PYTHON_VERSION: "3.9"
+        PYTHON_VERSION: "3.10.5"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-#
-#      - name: Docker Compose Action
-#        uses: isbang/compose-action@v1.4.1
-#        with:
-#          compose-file: "./docker-compose.yml"
+
+      - name: Docker Compose Action
+      - uses: KengoTODA/actions-setup-docker-compose@v1.0.9
+        with:
+          version: '2.14.2' # the full version of `docker-compose` command
 
 
       - name: Setup Python ${{ env.PYTHON_VERSION }}

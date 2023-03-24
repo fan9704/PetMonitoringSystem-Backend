@@ -2,7 +2,8 @@ from django.urls import path
 
 from api.views.gptViews import AdviceAPIView
 from api.views.userViews import Register, LoginAPI, LogoutAPI, EditProfileAPI,UserAPIView
-from api.views.petViews import PetTypeRUDAPIView, PetTypeCLAPIView, PetRUDAPIView, PetListView, PetCreateAPIView,PetQueryListView
+from api.views.petViews import PetTypeRUDAPIView, PetTypeCLAPIView, PetRUDAPIView, PetListView\
+    , PetCreateAPIView,PetQueryListView,PetCountAPIView
 from api.views.machineViews import MachineListView, MachineRUDAPIView
 
 urlpatterns = [
@@ -20,6 +21,7 @@ urlpatterns = [
     path('pet/list/', PetListView.as_view()),
     path('pet/list/<str:pet_type>/', PetQueryListView.as_view(), name='pet-list'),
     path('pet/', PetCreateAPIView.as_view()),
+    path('pet/count/petType', PetCountAPIView.as_view()),
     # Advice Routes
     path('advice/', AdviceAPIView.as_view()),
 
