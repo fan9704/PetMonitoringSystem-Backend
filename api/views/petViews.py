@@ -94,6 +94,14 @@ class PetCreateAPIView(APIView):
             return Response(data=None, status=status.HTTP_404_NOT_FOUND)
 
 
+class PetCountAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        petDict = dict()
+        for i in models.PetType.objects.all():
+            petDict[i.typename]= models.Pet.objects.filter(type=i.id).count()
+        return Response(data=petDict,status=status.HTTP_200_OK)
+
+
 def petResponseConverter(pet: models.Pet):
     if pet is not None:
         result = dict(
