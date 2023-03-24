@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Docker Compose Action
-      - uses: KengoTODA/actions-setup-docker-compose@v1
+      - uses: KengoTODA/actions-setup-docker-compose@v1.0.9
         with:
           version: '2.14.2' # the full version of `docker-compose` command
 
