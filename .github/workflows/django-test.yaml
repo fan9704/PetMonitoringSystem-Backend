@@ -11,44 +11,24 @@ on:
 jobs:
   simple_build:
     runs-on: ubuntu-latest
-    container: node:latest
-#    services:
-#      postgres:
-#        image: postgres:latest
-#        env:
-#          POSTGRES_DB: PET
-#          POSTGRES_PASSWORD: 123456
-#          POSTGRES_PORT: 5432
-#          POSTGRES_USER: test
-#        ports:
-#          - 5432:5432
-#        options: >-
-#          --health-cmd pg_isready
-#          --health-interval 10s
-#          --health-timeout 5s
-#          --health-retries 5
     env:
         DJANGO_SECRET_KEY: "erqwer23"
-        PYTHON_VERSION: '3.10'
+        PYTHON_VERSION: "3.10"
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
         uses: actions/checkout@v3
 
-#      - name: Setup docker compose
-#        uses: yu-ichiro/spin-up-docker-compose-action@v1
+#      - name: Docker Compose Action
+#        uses: isbang/compose-action@v1.4.1
 #        with:
-#            file: docker-compose.yml
-
+#          compose-file: "./docker-compose.yml"
       - name: Setup Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
            python-version: ${{ env.PYTHON_VERSION }}
-
       - name: Install pipenv
-        run: |
-            sudo apt-get update
-            sudo apt-get install python3-pip
-            pip install pipenv
+        run: pip install pipenv
       - name: Install Dependencies from pipenv
         run: |
             pipenv install
