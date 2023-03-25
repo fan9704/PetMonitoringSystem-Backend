@@ -45,7 +45,10 @@ jobs:
            python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install pipenv
-        run: pip install pipenv
+        run: |
+            sudo apt-get update
+            sudo apt-get install python3-pip
+            pip install pipenv
       - name: Install Dependencies from pipenv
         run: |
             pipenv install
