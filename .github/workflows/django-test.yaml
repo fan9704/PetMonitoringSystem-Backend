@@ -33,8 +33,7 @@ jobs:
       - name: Install Dependencies from pipenv
         run: |
             pipenv install
-  migrate:
-    steps:
+
       - name: Django Make Migration Checking
         run: |
             pipenv run python manage.py makemigrations
