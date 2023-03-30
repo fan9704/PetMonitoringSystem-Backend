@@ -9,11 +9,12 @@ on:
         branches: [master]
 
 jobs:
-  simple_build:
+  build:
     runs-on: ubuntu-latest
     env:
         DJANGO_SECRET_KEY: "erqwer23"
         PYTHON_VERSION: "3.10"
+        DOCKER_REPO: "pet-monitoring-system-backend"
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
@@ -32,21 +33,22 @@ jobs:
       - name: Install Dependencies from pipenv
         run: |
             pipenv install
+  migrate:
+    steps:
+      - name: Django Make Migration Checking
+        run: |
+            pipenv run python manage.py makemigrations
+      - name: Django Migrate Database to postgresql
+        run: |
+            pipenv run python manage.py migrate
+      - name: Create Elasticsearch Index
+        run: |
+            pipenv run python manage.py search_index --create
 
-#      - name: Django Make Migration Checking
-#        run: |
-#            pipenv run python manage.py makemigrations
-#      - name: Django Migrate Database to postgresql
-#        run: |
-#            pipenv run python manage.py migrate
-#      - name: Create Elasticsearch Index
-#        run: |
-#            pipenv run python manage.py search_index --create
-#
-#
-#      - name: Run Unit Tests
-#        run: |
-#            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
+
+      - name: Run Unit Tests
+        run: |
+            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
 #
 #      - name: Run Integration Tests
 #        run: |
@@ -55,3 +57,16 @@ jobs:
 #      - name: Run System Tests
 #        run: |
 #            pipenv run python manage.py test
+
+
+#      - name: DockerHub Login
+#        uses: docker/login-action@v2.1.0
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+#
+#      - name: Build the Docker image
+#        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}
+#
+#      - name: Docker Push
+#        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}
