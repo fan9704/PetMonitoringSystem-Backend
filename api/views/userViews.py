@@ -161,14 +161,14 @@ class EditProfileAPI(APIView):
         else:
             return Response({"status": "error", "edit": False}, status=status.HTTP_401_UNAUTHORIZED)
 
-    def get(self, request, pk):
-        user_id = pk
-        if user_id == '':
-            return Response({"info": False}, status=status.HTTP_204_NO_CONTENT)
-        else:
-            user_id = int(user_id)
-            user = User.objects.get(id=user_id)
-            return Response(userResponseConverter(user), status=status.HTTP_200_OK)
+    # def get(self, request, pk):
+    #     user_id = pk
+    #     if user_id == '':
+    #         return Response({"info": False}, status=status.HTTP_204_NO_CONTENT)
+    #     else:
+    #         user_id = int(user_id)
+    #         user = User.objects.get(id=user_id)
+    #         return Response(userResponseConverter(user), status=status.HTTP_200_OK)
 
 
 class UserAPIView(APIView):
