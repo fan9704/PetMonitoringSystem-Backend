@@ -54,3 +54,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Django Grafana Prometheus
 
 1. [Implement Grafana Prometheus on Django](https://karanchuri.medium.com/prometheus-grafana-in-django-92da4d782f8a)
+
+### GitHub Actions
+
+1. [GitHub Actions Push to Docker Hub](https://blog.pradumnasaraf.dev/dockerhub-githubactions)
