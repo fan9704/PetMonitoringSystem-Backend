@@ -1,19 +1,31 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from api.models import Pet, PetType, Machine, RecordType, Record
 
 
-class PetSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Pet
-        fields = ('id', 'name', 'keeper', 'type', 'birthday', 'content')
+        model = User
+        fields = ('username', 'first_name', 'last_name')
         read_only_fields = ('id',)
 
 
 class PetTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PetType
-        fields = ('id', 'typename', "description")
+        fields = '__all__'
         read_only_fields = ('id',)
+
+
+class PetSerializer(serializers.ModelSerializer):
+    keeper = UserSerializer()
+    type = PetTypeSerializer()
+
+    class Meta:
+        model = Pet
+        fields = '__all__'
+        read_only_fields = ('id',)
+        depth = 1
 
 
 class MachineSerializer(serializers.ModelSerializer):
@@ -31,7 +43,11 @@ class RecordTypeSerializer(serializers.ModelSerializer):
 
 
 class RecordSerializer(serializers.ModelSerializer):
+    pet = PetSerializer()
+    type = RecordTypeSerializer()
+
     class Meta:
         model = Record
-        fields = ('id', 'pet', 'type', 'data', 'machine')
+        fields = '__all__'
         read_only_fields = ('id',)
+        depth = 1
