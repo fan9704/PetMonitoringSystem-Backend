@@ -36,6 +36,7 @@ docker-compose up
 ### Step.3 Environment Variables .env Setup
 
 .env file
+Please refer .env.example 
 ```dotenv
 #Django
 DJANGO_SECRET_KEY =
@@ -60,6 +61,7 @@ RABBITMQ_VIRTUAL_HOST =
 BROKER_URL =
 #Redis
 REDIS_URL=
+...
 ```
 
 ### Step.4 Migrate Schema to PostgreSQL

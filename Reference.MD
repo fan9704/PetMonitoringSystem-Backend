@@ -9,15 +9,21 @@
 ### Install Plugins for MQTT
 
 ```shell
-docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_mqtt
-docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_web_mqtt
-docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_web_stomp
+docker exec -it <RabbitMQ ContainerID Or Container Name> rabbitmq-plugins enable rabbitmq_mqtt
+docker exec -it <RabbitMQ ContainerID Or Container Name> rabbitmq-plugins enable rabbitmq_web_mqtt
+docker exec -it <RabbitMQ ContainerID Or Container Name> rabbitmq-plugins enable rabbitmq_web_stomp
 ```
 
 ### Install RabbitMQ Management
 
 ```shell
-docker exec <RabbitMQ ContainerID> rabbitmq-plugins enable rabbitmq_management
+docker exec <RabbitMQ ContainerID Or Container Name> rabbitmq-plugins enable rabbitmq_management
+```
+
+### Check RabbitMQ current plugins
+
+```shell
+docker exec <RabbitMQ ContainerID Or Container Name> rabbitmq-plugins list
 ```
 
 ### Celery
@@ -27,6 +33,8 @@ Test Info
 ```shell
 Celery -A PetMonitoringSystemBackend worker -l info
 ```
+
+----
 
 ## Django 
 
@@ -54,6 +62,10 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Django Grafana Prometheus
 
 1. [Implement Grafana Prometheus on Django](https://karanchuri.medium.com/prometheus-grafana-in-django-92da4d782f8a)
+
+### Django Migration and Seed
+
+1. [Seeding and Migration through Django-Seed](https://medium.com/@ardho/migration-and-seeding-in-django-3ae322952111)
 
 ### GitHub Actions
 
