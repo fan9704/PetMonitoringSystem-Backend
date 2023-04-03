@@ -1223,6 +1223,23 @@
       "segments": [],
       "fields": [
         {
+          "field": "machine_set",
+          "type": [
+            "Number"
+          ],
+          "is_filterable": false,
+          "is_sortable": true,
+          "is_read_only": false,
+          "is_required": false,
+          "is_virtual": false,
+          "default_value": null,
+          "integration": null,
+          "reference": "api_machine.id",
+          "inverse_of": "pet",
+          "relationship": "HasMany",
+          "widget": null
+        },
+        {
           "field": "record_set",
           "type": [
             "Number"
@@ -1367,23 +1384,6 @@
       "segments": [],
       "fields": [
         {
-          "field": "record_set",
-          "type": [
-            "Number"
-          ],
-          "is_filterable": false,
-          "is_sortable": true,
-          "is_read_only": false,
-          "is_required": false,
-          "is_virtual": false,
-          "default_value": null,
-          "integration": null,
-          "reference": "api_record.id",
-          "inverse_of": "machine",
-          "relationship": "HasMany",
-          "widget": null
-        },
-        {
           "field": "id",
           "type": "Number",
           "is_filterable": true,
@@ -1423,6 +1423,36 @@
               "message": "Ensure this value is not null or not empty"
             }
           ]
+        },
+        {
+          "field": "onlineStatus",
+          "type": "Boolean",
+          "is_filterable": true,
+          "is_sortable": true,
+          "is_read_only": false,
+          "is_required": false,
+          "is_virtual": false,
+          "default_value": false,
+          "integration": null,
+          "reference": null,
+          "inverse_of": null,
+          "relationship": null,
+          "widget": null
+        },
+        {
+          "field": "pet",
+          "type": "Number",
+          "is_filterable": true,
+          "is_sortable": true,
+          "is_read_only": false,
+          "is_required": false,
+          "is_virtual": false,
+          "default_value": null,
+          "integration": null,
+          "reference": "api_pet.id",
+          "inverse_of": "machine_set",
+          "relationship": "BelongsTo",
+          "widget": null
         }
       ]
     },
@@ -1569,28 +1599,13 @@
           "inverse_of": null,
           "relationship": null,
           "widget": null
-        },
-        {
-          "field": "machine",
-          "type": "Number",
-          "is_filterable": true,
-          "is_sortable": true,
-          "is_read_only": false,
-          "is_required": false,
-          "is_virtual": false,
-          "default_value": null,
-          "integration": null,
-          "reference": "api_machine.id",
-          "inverse_of": "record_set",
-          "relationship": "BelongsTo",
-          "widget": null
         }
       ]
     }
   ],
   "meta": {
     "liana": "django-forestadmin",
-    "liana_version": "1.4.5",
+    "liana_version": "1.4.6",
     "stack": {
       "database_type": "postgresql",
       "orm_version": "4.1.7"

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 import logstash
 
@@ -49,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl',
     'corsheaders',
     'django_redis',
     'drf_yasg',
@@ -69,6 +70,8 @@ INSTALLED_APPS = [
     'api',
     'ws',
 ]
+if os.getenv("ELASTICSEARCH_ENABLE",False):
+    INSTALLED_APPS += ['django_elasticsearch_dsl',]
 
 MIDDLEWARE = [
     # 'django_prometheus.middleware.PrometheusBeforeMiddleware',
@@ -125,9 +128,18 @@ DATABASES = {
         'PASSWORD': os.getenv("POSTGRES_PASSWORD", "123456"),
         'HOST': os.getenv("POSTGRES_DB_URL", "127.0.0.1"),
         'PORT': '5432'
-    }
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("POSTGRES_TEST_DB", "TEST"),
+        'USER': os.getenv("POSTGRES_USER", "test"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "123456"),
+        'HOST': os.getenv("POSTGRES_DB_URL", "127.0.0.1"),
+        'PORT': '5432'
+    },
 }
-
+if 'test' in sys.argv:
+    DATABASES['default'] = DATABASES['test']
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -172,7 +184,7 @@ RABBITMQ_CONFIG = {
     "username": os.getenv("RABBITMQ_USERNAME", "guest"),
     "password": os.getenv("RABBITMQ_PASSWORD", "guest"),
     "serverip": os.getenv("RABBITMQ_SERVER_IP", "127.0.0.1"),
-    "port": os.getenv("RABBITMQ_PORT", "5672"),
+    "port": os.getenv("RABBITMQ_PORT", "1883"),
     "vhost": os.getenv("RABBITMQ_VIRTUAL_HOST", "/")
 }
 BROKER_URL = f'amqp://{RABBITMQ_CONFIG["username"]}:{RABBITMQ_CONFIG["password"]}@{RABBITMQ_CONFIG["serverip"]}:{RABBITMQ_CONFIG["port"]}{RABBITMQ_CONFIG["vhost"]}'
