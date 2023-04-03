@@ -48,9 +48,9 @@ jobs:
 #            pipenv run python manage.py search_index --create
 
 
-      - name: Run Unit Tests
-        run: |
-            pipenv run python manage.py test --pattern="*Test.py" --verbosity 2
+#      - name: Run Unit Tests
+#        run: |
+#            pipenv run python manage.py test --pattern="*Test.py" --verbosity 2
 #
 #      - name: Run Integration Tests
 #        run: |

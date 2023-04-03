@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: postgreSQL-Database
     environment:
-      POSTGRES_DB: PET
+      POSTGRES_DB: PET,TEST
       POSTGRES_USER: test
       POSTGRES_PASSWORD: 123456
     ports:
