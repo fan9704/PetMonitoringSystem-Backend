@@ -50,7 +50,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
+            pipenv run python manage.py test --pattern="*Test.py" --verbosity 2
 #
 #      - name: Run Integration Tests
 #        run: |
