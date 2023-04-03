@@ -24,9 +24,9 @@ jobs:
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "./docker-compose.yml"
-      - name: Enable RabbitMQ Plugins
-        run: |
-          docker exec -it rabbitmq rabbitmq-plugins enable rabbitmq_mqtt rabbitmq_web_mqtt rabbitmq_web_stomp
+#      - name: Enable RabbitMQ Plugins
+#        run: |
+#          docker exec -it rabbitmq rabbitmq-plugins enable rabbitmq_mqtt rabbitmq_web_mqtt rabbitmq_web_stomp
       - name: Setup Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v2
         with:
@@ -48,9 +48,9 @@ jobs:
 #            pipenv run python manage.py search_index --create
 
 
-#      - name: Run Unit Tests
-#        run: |
-#            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
+      - name: Run Unit Tests
+        run: |
+            pipenv run python manage.py api/tests/models --pattern="*Test.py" --verbosity 2
 #
 #      - name: Run Integration Tests
 #        run: |
