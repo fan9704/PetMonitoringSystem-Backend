@@ -65,7 +65,7 @@ class PetUrlTest(TestCase):
     #     self.assertEqual(response.data["name"], "cat8")
 
     def testListPet(self):
-        response = self.client.get('/api/pet/')
+        response = self.client.get('/api/pet/list/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 4)
         logger.debug("Complete Test List Pet")

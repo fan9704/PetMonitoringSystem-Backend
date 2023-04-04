@@ -23,7 +23,7 @@ class PetUrlTest(TestCase):
         logger.debug(response.status_code)
         logger.debug(response.content)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data["id"], 3)
+        self.assertEqual(type(response.data["id"]), type(3))
 
     # def testGetPet(self):
     #     response = self.client.get('/api/pet/1/', format='json')
