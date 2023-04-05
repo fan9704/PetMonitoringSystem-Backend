@@ -32,6 +32,7 @@ python-logstash = "*"
 channels = "*"
 paho-mqtt = "*"
 django-prometheus = "*"
+firebase-admin = "*"
 
 [dev-packages]
 
