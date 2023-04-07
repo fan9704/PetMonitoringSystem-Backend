@@ -40,6 +40,7 @@ class RabbitmqServer(object):
         )
 
     def expense(self, queueName, func):
+        self.channel.queue_declare(queue=queueName, durable=True)# Optional
         self.channel.basic_qos(prefetch_count=1)
         self.channel.basic_consume(
             queue=queueName,
