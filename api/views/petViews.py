@@ -47,6 +47,7 @@ class PetQueryListView(APIView):
 
 class PetCreateAPIView(APIView):
     @swagger_auto_schema(
+        operation_id='建立寵物',
         operation_summary='Create Pet',
         operation_description='Create Pet type and keeper should enter their ID',
         request_body=openapi.Schema(
