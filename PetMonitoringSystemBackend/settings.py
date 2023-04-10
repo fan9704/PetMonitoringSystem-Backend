@@ -70,8 +70,8 @@ INSTALLED_APPS = [
     'api',
     'ws',
 ]
-if os.getenv("ELASTICSEARCH_ENABLE",False):
-    INSTALLED_APPS += ['django_elasticsearch_dsl',]
+if os.getenv("ELASTICSEARCH_ENABLE", False):
+    INSTALLED_APPS += ['django_elasticsearch_dsl', ]
 
 MIDDLEWARE = [
     # 'django_prometheus.middleware.PrometheusBeforeMiddleware',
@@ -244,7 +244,7 @@ LOGGING = {
     },
 }
 
-#JWT
+# JWT
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
