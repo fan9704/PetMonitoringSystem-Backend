@@ -1,22 +1,32 @@
 import json
 import logging
 from api import models
+from api.management.commands.logger.commandLogger import CommandLogger
 
-logger = logging.getLogger("Record Listener")
+# logger = logging.getLogger("Record Listener")
+logger = CommandLogger("Record Listener").getLogger()
 
-def distanceCallBack(ch, method, properties, body: str):
-    logger.info("[Distance]", body.decode(encoding='UTF-8'))
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+
+def distanceCallBack(topic: str, body: str, ch=None, method=None, properties=None):
     data = json.loads(body)
+    logger.info("[Distance] Received " + str(data["Distance"]))
+    # ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def temperatureAndHumidityCallBack(ch, method, properties, body: str):
-    logger.info("[Temperature Humidity] Received ", body.decode(encoding='UTF-8'))
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+def temperatureAndHumidityCallBack(topic: str, body: str, ch=None, method=None, properties=None):
     data = json.loads(body)
-    machine = models.Machine.objects.get(name=data["machineId"])
-    temperatureRecordType = models.RecordType.objects.get(type="Temperature")
-    humidityRecordType = models.RecordType.objects.get(type="Humidity")
+    logger.info("[Temperature] Received " + str(data["Temperature"]))
+    logger.info("[Humidity] Received " + str(data["Humidity"]))
+    # ch.basic_ack(delivery_tag=method.delivery_tag)
+    # machine = models.Machine.objects.get(name=data["machineId"])
+    try:
+        machine = models.Machine.objects.get(name=topic.split("/")[1])
+    except models.Machine.DoesNotExist:
+        machine = models.Machine.objects.create(
+            name=topic.split("/")[1]
+        )
+    temperatureRecordType = models.RecordType.objects.get(type="temperature")
+    humidityRecordType = models.RecordType.objects.get(type="humidity")
     temperature = models.Record.objects.create(
         pet=machine.pet,
         type=temperatureRecordType,
@@ -31,13 +41,13 @@ def temperatureAndHumidityCallBack(ch, method, properties, body: str):
     humidity.save()
 
 
-def weightCallBack(ch, method, properties, body: str):
-    logger.info("[Weight] Received ", body.decode(encoding='UTF-8'))
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+def weightCallBack(topic: str, body: str, ch=None, method=None, properties=None):
     data = json.loads(body)
+    logger.info("[Weight] Received " + str(data["Weight"]))
+    # ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def waterCallBack(ch, method, properties, body: str):
-    logger.info("[Water] Received ", body.decode(encoding='UTF-8'))
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+def waterCallBack(topic: str, body: str, ch=None, method=None, properties=None):
     data = json.loads(body)
+    logger.info("[Water] Received " + str(data["Water"]))
+    # ch.basic_ack(delivery_tag=method.delivery_tag)

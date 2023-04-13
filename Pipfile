@@ -33,6 +33,7 @@ channels = "*"
 paho-mqtt = "*"
 django-prometheus = "*"
 firebase-admin = "*"
+python-json-logger = "*"
 
 [dev-packages]
 
