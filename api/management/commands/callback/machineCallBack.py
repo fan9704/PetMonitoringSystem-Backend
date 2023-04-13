@@ -3,12 +3,19 @@ import json
 from api.models import Machine
 
 
-def machineCallBack(ch, method, properties, body: str):
-    print("[Machine] Received ", body.decode(encoding='UTF-8'))
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+def machineCallBack(topic: str, body: str, ch=None, method=None, properties=None):
+    print("[Machine] Received ", body)
+    # ch.basic_ack(delivery_tag=method.delivery_tag)
     content = json.loads(body)
-    machine = Machine.objects.get(name=content["name"])
-    if content["status"]:
+    try:
+        machine = Machine.objects.get(
+            name=content["machineId"]
+        )
+    except Machine.DoesNotExist:
+        machine = Machine.objects.create(
+            name=content["machineId"]
+        )
+    if content["onlineStatus"]:
         machine.onlineStatus = True
     else:
         machine.onlineStatus = False
