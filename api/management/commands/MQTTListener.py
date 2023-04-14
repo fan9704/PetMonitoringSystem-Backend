@@ -4,10 +4,16 @@ from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        from api.utils.MQTTserver import client
+        from api.utils.MQTTserver import mqttClient
+        from api.management.commands.callback import recordCallBack, machineCallBack
 
-        def on_message(client, userdata, msg):
-            print(msg.topic + " " + bytes(msg.payload).decode(encoding='UTF-8'))
+        # Listen Record
+        mqttClient.subscribe_with_callback("distance/#",recordCallBack.distanceCallBack)
+        mqttClient.subscribe_with_callback("temperature/#", recordCallBack.temperatureAndHumidityCallBack)
+        mqttClient.subscribe_with_callback("weight/#", recordCallBack.weightCallBack)
+        mqttClient.subscribe_with_callback("water/#", recordCallBack.waterCallBack)
+        # Listen Machine
+        mqttClient.subscribe_with_callback("machine/status/#", machineCallBack.machineCallBack)
+        # Loop
+        mqttClient.loop_forever()
 
-        client.on_message = on_message
-        client.loop_forever()
