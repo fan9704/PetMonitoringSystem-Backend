@@ -10,7 +10,7 @@ from api.views.machineViews import MachineListView, MachineRUDAPIView
 urlpatterns = [
     # Account Routes
     path('account/register/', Register.as_view()),
-    # path('account/login/', LoginAPI.as_view()),
+    path('account/login/', LoginView.as_view(), name='login'),
     path('account/logout/', LogoutAPI.as_view()),
     path('account/profile/edit/', EditProfileAPI.as_view()),
     path('account/user/all', UserAPIView.as_view()),
@@ -29,5 +29,4 @@ urlpatterns = [
     # Nachine Routes
     path('machine/<int:pk>/', MachineRUDAPIView.as_view()),
     path('machine/list', MachineListView.as_view()),
-    path('login/', LoginView.as_view(), name='login'),
 ]
