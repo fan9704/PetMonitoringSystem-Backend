@@ -1,5 +1,8 @@
 import paho.mqtt.client as mqtt
 from PetMonitoringSystemBackend.settings import RABBITMQ_CONFIG
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MQTTClient:
@@ -11,16 +14,20 @@ class MQTTClient:
         self.client.connect(broker_host, broker_port, keepalive)
 
     def on_connect(self, client, userdata, flags, rc):
-        print("Connected with result code " + str(rc))
+        logger.info("Connected with result code " + str(rc))
 
     def on_message(self, client, userdata, msg):
-        if msg.topic in self.callbacks:
-            self.callbacks[msg.topic](msg.topic, msg.payload.decode())
+        if msg.topic.split("/")[0] in self.callbacks:
+            self.callbacks[msg.topic.split("/")[0]](
+                topic=msg.topic,
+                body=msg.payload.decode()
+            )
 
     def set_callback(self, topic, callback):
-        self.callbacks[topic] = callback
+        self.callbacks[topic.split("/")[0]] = callback
 
     def subscribe(self, topic):
+        logger.info(f"[Subscribe Topic] {topic}")
         self.client.subscribe(topic)
 
     def subscribe_with_callback(self, topic, callback):
@@ -34,7 +41,7 @@ class MQTTClient:
 if RABBITMQ_CONFIG["enable"]:
     mqttClient = MQTTClient(
         broker_host=RABBITMQ_CONFIG["serverip"],
-        broker_port=RABBITMQ_CONFIG["port"],
+        broker_port=int(RABBITMQ_CONFIG["port"]),
         keepalive=60
     )
 

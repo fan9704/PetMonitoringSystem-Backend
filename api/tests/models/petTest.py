@@ -1,8 +1,11 @@
 import datetime
+import logging
 
 from django.contrib.auth.models import User
 from django.test import TestCase
 from api.models import Pet, PetType
+
+logger = logging.getLogger(__name__)
 
 
 class PetModelTest(TestCase):
@@ -21,48 +24,33 @@ class PetModelTest(TestCase):
     def testPetName(self):
         cat1 = Pet.objects.get(name="cat1")
         dog1 = Pet.objects.get(name="dog1")
-        # Name
-        self.assertEqual(cat1.name, "cat1")
-        self.assertEqual(dog1.name, "dog1")
-        print("Complete Test Pet Name")
-
-    def testPetKeeper(self):
-        cat1 = Pet.objects.get(name="cat1")
-        cat2 = Pet.objects.get(name="cat2")
 
         u1 = User.objects.get(username="u1")
-        u2 = User.objects.get(username="u2")
 
-        self.assertEqual(cat1.keeper, u1)
-        self.assertEqual(cat2.keeper, u2)
-        print("Complete Test Pet Keeper")
-
-    def testPetType(self):
         catType = PetType.objects.get(typename="cat")
         dogType = PetType.objects.get(typename="dog")
 
-        cat1 = Pet.objects.get(name="cat1")
-        dog1 = Pet.objects.get(name="dog1")
+        self.assertEqual(cat1.name, "cat1")
+        self.assertEqual(dog1.name, "dog1")
+        logger.debug("Complete Pet Name Model Test")
+
+        self.assertEqual(cat1.keeper, u1)
+        self.assertEqual(dog1.keeper, u1)
+        logger.debug("Complete Pet Keeper Model Test")
 
         self.assertEqual(cat1.type, catType)
         self.assertEqual(dog1.type, dogType)
-        print("Complete Test Pet Type")
-
-    def testPetBirthday(self):
-        cat1 = Pet.objects.get(name="cat1")
-        dog1 = Pet.objects.get(name="dog1")
+        logger.debug("Complete Pet Type Model Test")
 
         self.assertEqual(cat1.birthday, datetime.date.today())
         self.assertEqual(dog1.birthday, datetime.date.today())
-        print("Complete Test Pet Birthday")
-
-    def testPetContent(self):
-        cat1 = Pet.objects.get(name="cat1")
-        dog1 = Pet.objects.get(name="dog1")
+        logger.debug("Complete Pet Birthday Model Test")
 
         self.assertEqual(cat1.content, "cat1")
         self.assertEqual(dog1.content, "dog1")
-        print("Complete Test Pet Content")
+        logger.debug("Complete Pet Content Model Test")
 
-
-
+    def tearDown(self):
+        Pet.objects.all().delete()
+        User.objects.all().delete()
+        PetType.objects.all().delete()
