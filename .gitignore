@@ -4,3 +4,4 @@
 /Scripts
 /Include
 /health_check_storage_test
+/__pycache__/**

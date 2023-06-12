@@ -131,3 +131,9 @@ python manage.py test api/tests/models --pattern="*Test.py" [--verbosity 2]# Uni
 python manage.py test --pattern="*Test.py" #Intergration Test
 python manage.py test  #Intergration Test
 ```
+
+### Run with ASGI
+
+```shell
+daphne PetMonitoringSystemBackend.asgi:application
+```

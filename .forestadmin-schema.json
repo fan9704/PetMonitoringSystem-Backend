@@ -1605,10 +1605,10 @@
   ],
   "meta": {
     "liana": "django-forestadmin",
-    "liana_version": "1.4.6",
+    "liana_version": "1.5.0",
     "stack": {
       "database_type": "postgresql",
-      "orm_version": "4.1.7"
+      "orm_version": "4.2.2"
     }
   }
 }

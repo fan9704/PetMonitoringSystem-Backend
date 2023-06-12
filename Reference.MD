@@ -54,10 +54,12 @@ Celery -A PetMonitoringSystemBackend worker -l info
 
 1. [Django Logstash push logging to Kibana](https://www.mls-tech.info/python/python-django-logging-to-elk/)
 2. [Python Logger](https://www.cnblogs.com/jesse123/p/14135551.html)
+3. [Python Logging Handler](https://blog.csdn.net/yypsober/article/details/51800120)
 
 ### Django Websocket
 
 1. [Channels Chatroom](https://zhuanlan.zhihu.com/p/373801436)
+2. [Django Websockets: A Complete Beginners Guide!](https://esketchers.com/django-websockets-a-complete-beginners-guide/)
 
 ### Django Grafana Prometheus
 
