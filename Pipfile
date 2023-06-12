@@ -34,6 +34,7 @@ paho-mqtt = "*"
 firebase-admin = "6.1.0"
 daphne = "*"
 channels-redis = "==4.1.0"
+amqp = "5.1.1"
 
 [dev-packages]
 
