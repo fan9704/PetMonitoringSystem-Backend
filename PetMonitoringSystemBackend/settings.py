@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'health_check.cache',
     'health_check.storage',
     'health_check.contrib.migrations',
-    'health_check.contrib.rabbitmq',  # requires RabbitMQ broker
+    # 'health_check.contrib.rabbitmq',  # requires RabbitMQ broker
     'health_check.contrib.redis',  # requires Redis
 
     'api',

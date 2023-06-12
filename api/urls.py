@@ -6,6 +6,7 @@ from api.views.userViews import Register, LogoutAPI, EditProfileAPI, UserAPIView
 from api.views.petViews import PetTypeRUDAPIView, PetTypeCLAPIView, PetRUDAPIView, PetListView, PetCreateAPIView, \
     PetQueryListView, PetCountAPIView
 from api.views.machineViews import MachineListView, MachineRUDAPIView
+from api.views.recordViews import RecordTypeListView, RecordByRecordType
 
 urlpatterns = [
     # Account Routes
@@ -25,8 +26,11 @@ urlpatterns = [
     path('pet/count/petType', PetCountAPIView.as_view()),
     # Advice Routes
     path('advice/', AdviceAPIView.as_view()),
-
-    # Nachine Routes
+    # Machine Routes
     path('machine/<int:pk>/', MachineRUDAPIView.as_view()),
-    path('machine/list', MachineListView.as_view()),
+    path('machine/list/', MachineListView.as_view()),
+    # Record Routes
+    path('recordType/list/', RecordTypeListView.as_view(), name="recordType-list"),
+    path('record/<str:recordType>/', RecordByRecordType.as_view({'get': 'recordType'}),name="recordType"),
+    path('record/<str:recordType>/<str:petName>/', RecordByRecordType.as_view({'get': 'recordTypeAndPetName'}),name="recordTypeAndPetName"),
 ]

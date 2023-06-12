@@ -12,22 +12,22 @@ import os
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-from ws import routing
+from api.routing import websocket_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PetMonitoringSystemBackend.settings')
 
 # application = get_asgi_application()
 
 application = ProtocolTypeRouter({
-    # http请求使用这个
+    # http
     "http": get_asgi_application(),
-
-    # websocket请求使用这个
-    "websocket": AuthMiddlewareStack(
+    # websocket
+    "websocket":
+        # AuthMiddlewareStack(
         URLRouter(
-            routing.websocket_urlpatterns
+            websocket_urlpatterns
         )
-    ),
+        # ),
 })
 
 
