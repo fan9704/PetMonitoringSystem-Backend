@@ -52,54 +52,55 @@ class Register(APIView):
             )
 
 
-class LoginAPI(APIView):
-    @swagger_auto_schema(
-        operation_summary='Login',
-        operation_description='User Login',
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'username': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'password': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                )
-            }
-        )
-    )
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        username = data.get("username", "")
-        password = data.get("password", "")
-        user = User.objects.get(username=username)
-        print("Session", request.session.items(), "Cookie", request.COOKIES.items())
-        try:
-            if username == '' or password == '':
-                return Response(
-                    {"status": "Failed", "login": False, "error": "Account or Password cannot be empty"},
-                    status=status.HTTP_406_NOT_ACCEPTABLE)
-            authedUser = auth.authenticate(username=username, password=password)
-            if authedUser:
-                print(authedUser.username, "Has Authenticated")
-                auth.login(request, authedUser)
-                save = request.data.get('save', False)
-                print(save)
-                if save:
-                    print("Session", request.session.items(), "Cookie", request.COOKIES.items())
-                return Response({"status": "success", "login": True, "User": userResponseConverter(user)},
-                                status=status.HTTP_200_OK)
-            else:
-                print("User: ", userResponseConverter(user), "Login Failed")
-                return Response({"status": "failed", "login": False, "error": "Account or Password Error"},
-                                status=status.HTTP_200_OK)
-
-        except Exception as E:
-            print(E)
-            user = None
-            print("User: ", username, "Login Failed")
-        return Response({"status": "success", "login": True, "User": userResponseConverter(user)},
-                        status=status.HTTP_200_OK)
+# class LoginAPI(APIView):
+#     @swagger_auto_schema(
+#         operation_summary='Login',
+#         operation_description='User Login',
+#         request_body=openapi.Schema(
+#             type=openapi.TYPE_OBJECT,
+#             properties={
+#                 'username': openapi.Schema(
+#                     type=openapi.TYPE_STRING
+#                 ),
+#                 'password': openapi.Schema(
+#                     type=openapi.TYPE_STRING
+#                 )
+#             }
+#         )
+#     )
+#     def post(self, request, *args, **kwargs):
+#         data = request.data
+#         username = data.get("username", "")
+#         password = data.get("password", "")
+#         user = User.objects.get(username=username)
+#         print("Session", request.session.items(), "Cookie", request.COOKIES.items())
+#         try:
+#             if username == '' or password == '':
+#                 return Response(
+#                     {"status": "Failed", "login": False, "error": "Account or Password cannot be empty"},
+#                     status=status.HTTP_406_NOT_ACCEPTABLE)
+#             authedUser = auth.authenticate(username=username, password=password)
+#             if authedUser:
+#                 print(authedUser.username, "Has Authenticated")
+#                 auth.login(request, authedUser)
+#                 save = request.data.get('save', False)
+#                 print(save)
+#                 if save:
+#                     print("Session", request.session.items(), "Cookie", request.COOKIES.items())
+#                     return Response(
+#                         {"status": "success", "login": True, "User": userResponseConverter(user), "test": "ok"},
+#                         status=status.HTTP_200_OK)
+#             else:
+#                 print("User: ", userResponseConverter(user), "Login Failed")
+#                 return Response({"status": "failed", "login": False, "error": "Account or Password Error"},
+#                                 status=status.HTTP_200_OK)
+#
+#         except Exception as E:
+#             print(E)
+#             user = None
+#             print("User: ", username, "Login Failed")
+#         return Response({"status": "success", "login": True, "User": userResponseConverter(user), "test": "no"},
+#                         status=status.HTTP_200_OK)
 
 
 class LogoutAPI(APIView):
