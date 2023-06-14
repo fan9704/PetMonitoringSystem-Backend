@@ -1609,7 +1609,6 @@
     "stack": {
       "database_type": "postgresql",
       "orm_version": "4.2.2"
-
     }
   }
 }

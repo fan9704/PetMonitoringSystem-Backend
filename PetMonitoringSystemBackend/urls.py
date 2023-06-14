@@ -52,6 +52,6 @@ urlpatterns = [
 
     path('health/', include('health_check.urls')),
 
-    path('forest/', include('django_forest.urls')),
+    # path('forest/', include('django_forest.urls')),
     # path('metrics/', include(prometheus_urls))
 ]

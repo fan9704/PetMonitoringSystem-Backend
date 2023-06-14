@@ -10,8 +10,8 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-from django_forest import init_forest
+# from django_forest import init_forest
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PetMonitoringSystemBackend.settings')
-init_forest()
+# init_forest()
 application = get_wsgi_application()
