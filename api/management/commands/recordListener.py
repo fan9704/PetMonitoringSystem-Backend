@@ -1,16 +1,25 @@
 from django.core.management.base import BaseCommand
+from PetMonitoringSystemBackend.settings import RABBITMQ_CONFIG
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        from api.utils.Rabbitmqserver import RabbitmqClient
+        from api.utils.Rabbitmqserver import RabbitmqServer
         from api.management.commands.callback import recordCallBack,machineCallBack
+        if RABBITMQ_CONFIG["enable"]:
+            rabbitmqClient = RabbitmqServer(
+                username=RABBITMQ_CONFIG["username"],
+                password=RABBITMQ_CONFIG["password"],
+                serverip=RABBITMQ_CONFIG["serverip"],
+                port=RABBITMQ_CONFIG["port"],
+                virtual_host=RABBITMQ_CONFIG["vhost"]
+            )
 
-        RabbitmqClient.connect()
+        rabbitmqClient.connect()
         # Listen Record
-        RabbitmqClient.expense("distance/#", recordCallBack.distanceCallBack)
-        RabbitmqClient.expense("temperature/#", recordCallBack.temperatureAndHumidityCallBack)
-        RabbitmqClient.expense("weight/#", recordCallBack.weightCallBack)
-        RabbitmqClient.expense("water/#", recordCallBack.waterCallBack)
+        rabbitmqClient.expense("distance/#", recordCallBack.distanceCallBack)
+        rabbitmqClient.expense("temperature/#", recordCallBack.temperatureAndHumidityCallBack)
+        rabbitmqClient.expense("weight/#", recordCallBack.weightCallBack)
+        rabbitmqClient.expense("water/#", recordCallBack.waterCallBack)
         # Listen Machine
-        RabbitmqClient.expense("machine/status/#", machineCallBack.machineCallBack)
+        rabbitmqClient.expense("machine/status/#", machineCallBack.machineCallBack)
