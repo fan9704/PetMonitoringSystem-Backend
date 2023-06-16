@@ -135,5 +135,5 @@ python manage.py test  #Intergration Test
 ### Run with ASGI
 
 ```shell
-daphne PetMonitoringSystemBackend.asgi:application
+daphne -b 0.0.0.0 -p 8000 PetMonitoringSystemBackend.asgi:application
 ```

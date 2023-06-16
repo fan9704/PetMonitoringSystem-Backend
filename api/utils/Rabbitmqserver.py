@@ -57,14 +57,14 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-if RABBITMQ_CONFIG["enable"]:
-    RabbitmqClient = RabbitmqServer(
-        username=RABBITMQ_CONFIG["username"],
-        password=RABBITMQ_CONFIG["password"],
-        serverip=RABBITMQ_CONFIG["serverip"],
-        port=RABBITMQ_CONFIG["port"],
-        virtual_host=RABBITMQ_CONFIG["vhost"]
-    )
+# if RABBITMQ_CONFIG["enable"]:
+#     RabbitmqClient = RabbitmqServer(
+#         username=RABBITMQ_CONFIG["username"],
+#         password=RABBITMQ_CONFIG["password"],
+#         serverip=RABBITMQ_CONFIG["serverip"],
+#         port=RABBITMQ_CONFIG["port"],
+#         virtual_host=RABBITMQ_CONFIG["vhost"]
+#     )
 # RabbitmqClient.connect()
 # if __name__ == "__main__":
 #     import json
