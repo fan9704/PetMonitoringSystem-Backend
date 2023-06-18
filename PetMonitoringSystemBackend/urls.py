@@ -14,7 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.contrib.staticfiles.views import serve
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -25,6 +26,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework_simplejwt.views import TokenVerifyView
+
+
+def return_static(request, path, insecure=True, **kwargs):
+    return serve(request, path, insecure=True, **kwargs)
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -51,6 +57,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path('health/', include('health_check.urls')),
+    re_path(r'^static/(?P<path>.*)', return_static, name='static'),
 
     # path('forest/', include('django_forest.urls')),
     # path('metrics/', include(prometheus_urls))
