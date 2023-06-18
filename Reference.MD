@@ -72,3 +72,13 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### GitHub Actions
 
 1. [GitHub Actions Push to Docker Hub](https://blog.pradumnasaraf.dev/dockerhub-githubactions)
+
+### Daphne
+
+1. [Daphne Django Static file missing](https://blog.csdn.net/zy010101/article/details/121679187)
+2. [Django Deploy through Daphne](https://wyde.github.io/2017/11/24/Deploying-Django-Channels-using-Daphne/)
+
+
+### Ubuntu
+
+1. [Install Python3 in Ubuntu](https://computingforgeeks.com/how-to-install-python-on-ubuntu-linux-system/)
