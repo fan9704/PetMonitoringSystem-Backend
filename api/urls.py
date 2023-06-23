@@ -10,27 +10,29 @@ from api.views.recordViews import RecordTypeListView, RecordByRecordType
 
 urlpatterns = [
     # Account Routes
-    path('account/register/', Register.as_view()),
-    path('account/login/', LoginView.as_view(), name='login'),
-    path('account/logout/', LogoutAPI.as_view()),
-    path('account/profile/edit/', EditProfileAPI.as_view()),
-    path('account/user/all', UserAPIView.as_view()),
+    path('account/register/', Register.as_view(),name='account-register'),
+    path('account/login/', LoginView.as_view(), name='account-login'),
+    path('account/logout/', LogoutAPI.as_view(),name='account-logout'),
+    path('account/profile/edit/', EditProfileAPI.as_view(),name='account-profile-edit'),
+    path('account/user/all/', UserAPIView.as_view(),name='account-list'),
     # Pet Type Routes
-    path('petType/<int:pk>/', PetTypeRUDAPIView.as_view()),
-    path('petType/', PetTypeCLAPIView.as_view()),
+    path('petType/<int:pk>/', PetTypeRUDAPIView.as_view(),name="petType-rud"),
+    path('petType/', PetTypeCLAPIView.as_view(),name="petType-create-list"),
     # Pet Routes
-    path('pet/<int:pk>/', PetRUDAPIView.as_view()),
-    path('pet/list/', PetListView.as_view()),
-    path('pet/list/<str:pet_type>/', PetQueryListView.as_view(), name='pet-list'),
-    path('pet/', PetCreateAPIView.as_view()),
-    path('pet/count/petType', PetCountAPIView.as_view()),
+    path('pet/<int:pk>/', PetRUDAPIView.as_view(),name='pet-rud'),
+    path('pet/list/', PetListView.as_view(), name='pet-list'),
+    path('pet/list/<str:pet_type>/', PetQueryListView.as_view(), name='pet-listByType'),
+    path('pet/', PetCreateAPIView.as_view(), name="pet-create"),
+    path('pet/count/petType/', PetCountAPIView.as_view(), name="pet-count"),
     # Advice Routes
-    path('advice/', AdviceAPIView.as_view()),
+    path('advice/', AdviceAPIView.as_view(),name='advice'),
     # Machine Routes
-    path('machine/<int:pk>/', MachineRUDAPIView.as_view()),
-    path('machine/list/', MachineListView.as_view()),
-    # Record Routes
+    path('machine/<int:pk>/', MachineRUDAPIView.as_view(),name='machine-rud'),
+    path('machine/list/', MachineListView.as_view(),name='machine-list'),
+    # RecordType Routes
     path('recordType/list/', RecordTypeListView.as_view(), name="recordType-list"),
-    path('record/<str:recordType>/', RecordByRecordType.as_view({'get': 'recordType'}),name="recordType"),
-    path('record/<str:recordType>/<str:petName>/', RecordByRecordType.as_view({'get': 'recordTypeAndPetName'}),name="recordTypeAndPetName"),
+    # Record Routes
+    path('record/<str:recordType>/', RecordByRecordType.as_view({'get': 'recordType'}), name="recordType"),
+    path('record/<str:recordType>/<str:petName>/', RecordByRecordType.as_view({'get': 'recordTypeAndPetName'}),
+         name="record-listByRecordTypeAndPetName"),
 ]

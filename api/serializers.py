@@ -31,8 +31,9 @@ class PetSerializer(serializers.ModelSerializer):
 class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Machine
-        fields = ('id', 'name')
+        fields = '__all__'
         read_only_fields = ('id',)
+        depth = 1
 
 
 class RecordTypeSerializer(serializers.ModelSerializer):
