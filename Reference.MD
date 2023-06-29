@@ -55,6 +55,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 1. [Django Logstash push logging to Kibana](https://www.mls-tech.info/python/python-django-logging-to-elk/)
 2. [Python Logger](https://www.cnblogs.com/jesse123/p/14135551.html)
 3. [Python Logging Handler](https://blog.csdn.net/yypsober/article/details/51800120)
+4. [Python Logger Produce Log File](https://shian420.pixnet.net/blog/post/350291572-%5Bpython%5D-logging-%E5%B9%AB%E4%BD%A0%E7%B4%80%E9%8C%84%E4%BB%BB%E4%BD%95%E8%A8%8A%E6%81%AF)
 
 ### Django Websocket
 
