@@ -83,3 +83,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Ubuntu
 
 1. [Install Python3 in Ubuntu](https://computingforgeeks.com/how-to-install-python-on-ubuntu-linux-system/)
+
+### Sonar Qube
+
+1. [Fix Container Hosting maximum memory problem](https://blog.csdn.net/weixin_39643007/article/details/108435139)
