@@ -87,3 +87,9 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Sonar Qube
 
 1. [Fix Container Hosting maximum memory problem](https://blog.csdn.net/weixin_39643007/article/details/108435139)
+
+### Firebase
+
+Note: FCM V1 not support post request directly should pass OAuth 2.0 Authentication
+
+1. [FCM V1 through OAuth 2.0](https://apoorv487.medium.com/testing-fcm-push-notification-http-v1-through-oauth-2-0-playground-postman-terminal-part-2-7d7a6a0e2fa0)
