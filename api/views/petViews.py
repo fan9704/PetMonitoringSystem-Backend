@@ -1,19 +1,18 @@
-import datetime
-import time
+import logging
 
-from django.contrib.auth.models import User
-from django.contrib import auth
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets, mixins, generics
+from rest_framework import status, generics
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api import models
-from api.serializers import PetSerializer, PetTypeSerializer
+from api.serializers import PetSerializer, PetTypeSerializer, PetRequestSerializer
 
 # Pet Type API
-from api.views.userViews import userResponseConverter
+
+logger = logging.getLogger(__name__)
 
 
 class PetTypeRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -29,8 +28,9 @@ class PetTypeCLAPIView(generics.ListCreateAPIView):
 # Pet API
 
 class PetRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     queryset = models.Pet.objects.all()
-    serializer_class = PetSerializer
+    serializer_class = PetRequestSerializer
 
 
 class PetListView(generics.ListAPIView):
@@ -46,85 +46,34 @@ class PetQueryListView(APIView):
 
 
 class PetCreateAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
     @swagger_auto_schema(
         operation_id='建立寵物',
         operation_summary='Create Pet',
         operation_description='Create Pet type and keeper should enter their ID',
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'name': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'keeper': openapi.Schema(
-                    type=openapi.TYPE_NUMBER
-                ),
-                'type': openapi.Schema(
-                    type=openapi.TYPE_NUMBER
-                ),
-                'birthday': openapi.Schema(
-                    type=openapi.FORMAT_DATE
-                ),
-                'content': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-            }
-        )
+        request_body=PetRequestSerializer,
+        manual_parameters=[
+            openapi.Parameter(
+                name='image',
+                in_=openapi.IN_FORM,
+                description='上傳的圖片',
+                type=openapi.TYPE_FILE
+            )
+        ],
     )
     def post(self, request, *args, **kwargs):
-        try:
-            name = request.data.get("name", "")
-            keeperId = request.data.get("keeper", 0)
-            petTypeId = request.data.get("type", 0)
-            birthday = request.data.get("birthday", datetime.date.today())
-            content = request.data.get("content", "")
-
-            keeper = User.objects.get(pk=keeperId)
-            petType = models.PetType.objects.get(pk=petTypeId)
-
-            pet = models.Pet.objects.create(
-                name=name,
-                keeper=keeper,
-                type=petType,
-                birthday=birthday,
-                content=content
-            )
-            return Response(data=petResponseConverter(pet), status=status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e)
-            return Response(data=None, status=status.HTTP_404_NOT_FOUND)
+        serializer = PetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            logger.info(serializer.errors)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
 class PetCountAPIView(APIView):
     def get(self, request, *args, **kwargs):
         petDict = dict()
         for i in models.PetType.objects.all():
-            petDict[i.typename]= models.Pet.objects.filter(type=i.id).count()
-        return Response(data=petDict,status=status.HTTP_200_OK)
-
-
-def petResponseConverter(pet: models.Pet):
-    if pet is not None:
-        result = dict(
-            id=pet.id,
-            name=pet.name,
-            keeper=userResponseConverter(pet.keeper),
-            type_id=petTypeResponseConverter(pet.type),
-            birthday=pet.birthday,
-            content=pet.content
-        )
-    else:
-        result = ""
-    return result
-
-
-def petTypeResponseConverter(petType: models.PetType):
-    if petType is not None:
-        result = dict(
-            id=petType.id,
-            typename=petType.typename,
-            description=petType.description
-        )
-    else:
-        result = ""
-    return result
+            petDict[i.typename] = models.Pet.objects.filter(type=i.id).count()
+        return Response(data=petDict, status=status.HTTP_200_OK)
