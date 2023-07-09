@@ -2,6 +2,10 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+def upload_to(instance, filename):
+    return 'images/{filename}'.format(filename=filename)
+
+
 class PetType(models.Model):
     typename = models.CharField(max_length=256, null=True, blank=True, verbose_name="寵物種類")
     description = models.TextField(null=True, blank=True, verbose_name="寵物種類描述")
@@ -16,6 +20,7 @@ class Pet(models.Model):
     type = models.ForeignKey(to=PetType, on_delete=models.CASCADE, verbose_name="寵物種類")
     birthday = models.DateField(verbose_name="寵物生日")
     content = models.TextField(verbose_name="寵物敘述")
+    image = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     # External Columns
     # chip_id = models.CharField(max_length=256,verbose_name="晶片編號")
@@ -45,6 +50,7 @@ class Record(models.Model):
     pet = models.ForeignKey(to=Pet, on_delete=models.CASCADE, verbose_name="寵物ID")
     type = models.ForeignKey(to=RecordType, on_delete=models.CASCADE, verbose_name="記錄種類")
     data = models.FloatField(null=True, blank=True, verbose_name="數據值")
+
     # machine = models.ForeignKey(to=Machine, on_delete=models.CASCADE, verbose_name="機器編號")
 
     def __str__(self):
