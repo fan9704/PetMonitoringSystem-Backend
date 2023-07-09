@@ -26,6 +26,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework_simplejwt.views import TokenVerifyView
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 def return_static(request, path, insecure=True, **kwargs):
@@ -57,8 +59,8 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path('health/', include('health_check.urls')),
-    re_path(r'^static/(?P<path>.*)', return_static, name='static'),
+    re_path(r'^static/(?P<path>.*)$', return_static, name='static'),
 
     # path('forest/', include('django_forest.urls')),
     # path('metrics/', include(prometheus_urls))
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
