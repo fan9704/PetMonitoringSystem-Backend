@@ -70,6 +70,10 @@ Celery -A PetMonitoringSystemBackend worker -l info
 
 1. [Seeding and Migration through Django-Seed](https://medium.com/@ardho/migration-and-seeding-in-django-3ae322952111)
 
+### Django Image Upload
+
+1. [Uploading Images to Django REST Framework from Forms in React](https://dev.to/thomz/uploading-images-to-django-rest-framework-from-forms-in-react-3jhj)
+
 ### GitHub Actions
 
 1. [GitHub Actions Push to Docker Hub](https://blog.pradumnasaraf.dev/dockerhub-githubactions)

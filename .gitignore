@@ -5,3 +5,6 @@
 /Include
 /health_check_storage_test
 /__pycache__/**
+
+/media/images/**
+firebase.json
