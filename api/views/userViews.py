@@ -181,6 +181,60 @@ class UserAPIView(APIView):
         return Response(userList, status=status.HTTP_200_OK)
 
 
+class OAuthUserRegisterAPI(APIView):
+    @swagger_auto_schema(
+        operation_summary='OAuth User Register',
+        operation_description='OAuth User Register',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'username': openapi.Schema(
+                    type=openapi.TYPE_STRING
+                ),
+                'password': openapi.Schema(
+                    type=openapi.TYPE_STRING
+                ),
+                'email': openapi.Schema(
+                    type=openapi.TYPE_STRING
+                ),
+            }
+        )
+    )
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        email = request.data.get('email')
+        print(username, email, password)
+        user = User.objects.create_user(username, email, password)
+        print("OAuth User Join In DataBase")
+        return Response({
+            "status": "success",
+            "register": True,
+            "Identity": "OAuth User",
+            "user": userResponseConverter(user)
+        }, status=status.HTTP_200_OK)
+
+
+class OAuthUserLoginAPI(APIView):
+    @swagger_auto_schema(
+        operation_summary='OAuth User Login',
+        operation_description='OAuth User Login',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'email': openapi.Schema(
+                    type=openapi.TYPE_STRING
+                ),
+            }
+        )
+    )
+    def post(self, request):
+        email = request.data.get('email')
+        user = User.objects.get(email=email)
+        print("OAuth User Login")
+        return Response(userResponseConverter(user), status=status.HTTP_200_OK)
+
+
 def userResponseConverter(user):
     if user is not None:
         result = dict(
