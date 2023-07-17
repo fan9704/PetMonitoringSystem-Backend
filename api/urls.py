@@ -1,6 +1,6 @@
 from django.urls import path
 
-from api.views.firebaseViews import FcmTokenAPI
+# from api.views.firebaseViews import FcmTokenAPI
 from api.views.gptViews import AdviceAPIView
 from api.views.loginViews import LoginView
 from api.views.userViews import Register, LogoutAPI, EditProfileAPI, UserAPIView,OAuthUserRegisterAPI,OAuthUserLoginAPI
@@ -40,5 +40,5 @@ urlpatterns = [
     path('record/<str:recordType>/<str:petName>/', RecordByRecordType.as_view({'get': 'recordTypeAndPetName'}),
          name="record-listByRecordTypeAndPetName"),
     # Fcm Token Routes
-    path('FcmToken/user', FcmTokenAPI.as_view())
+    # path('FcmToken/user', FcmTokenAPI.as_view())
 ]
