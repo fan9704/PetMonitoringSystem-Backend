@@ -1,11 +1,11 @@
 from django.urls import path
 
-# from api.views.firebaseViews import FcmTokenAPI
+from api.views.firebaseViews import FcmTokenAPI
 from api.views.gptViews import AdviceAPIView
 from api.views.loginViews import LoginView
 from api.views.userViews import Register, LogoutAPI, EditProfileAPI, UserAPIView,OAuthUserRegisterAPI,OAuthUserLoginAPI
 from api.views.petViews import PetTypeRUDAPIView, PetTypeCLAPIView, PetRUDAPIView, PetListView, PetCreateAPIView, \
-    PetQueryListView, PetCountAPIView
+    PetQueryListView, PetCountAPIView, PetUploadImageAPIView
 from api.views.machineViews import MachineListView, MachineRUDAPIView
 from api.views.recordViews import RecordTypeListView, RecordByRecordType
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('pet/list/<str:pet_type>/', PetQueryListView.as_view(), name='pet-listByType'),
     path('pet/', PetCreateAPIView.as_view(), name="pet-create"),
     path('pet/count/petType/', PetCountAPIView.as_view(), name="pet-count"),
+    path('pet/image/<int:pk>/', PetUploadImageAPIView.as_view(), name="pet-upload-image"),
     # Advice Routes
     path('advice/', AdviceAPIView.as_view(),name='advice'),
     # Machine Routes
@@ -40,5 +41,5 @@ urlpatterns = [
     path('record/<str:recordType>/<str:petName>/', RecordByRecordType.as_view({'get': 'recordTypeAndPetName'}),
          name="record-listByRecordTypeAndPetName"),
     # Fcm Token Routes
-    # path('FcmToken/user', FcmTokenAPI.as_view())
+    path('FcmToken/user/', FcmTokenAPI.as_view())
 ]
