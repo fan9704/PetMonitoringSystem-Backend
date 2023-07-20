@@ -1,25 +1,62 @@
+import logging
+
 import firebase_admin
 import os
 import requests
 import json
 from firebase_admin import credentials
 from firebase_admin import messaging
-from PetMonitoringSystemBackend.settings import FIREBASE_INFO
+from django.contrib.auth.models import User
+from api.models import FcmToken
+
+logger = logging.getLogger(__name__)
+
+# from PetMonitoringSystemBackend.settings import FIREBASE_INFO
+FIREBASE_INFO = dict({
+    "type": os.getenv("FIREBASE_TYPE"),
+    "project_id": os.getenv("FIREBASE_PROJECT_ID"),
+    "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
+    "private_key": os.getenv("FIREBASE_PRIVATE_KEY"),
+    "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
+    "client_id": os.getenv("FIREBASE_CLIENT_ID"),
+    "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
+    "token_uri": os.getenv("FIREBASE_TOEKN_URI"),
+    "auth_provider_x509_cert_url": os.getenv("FIREBASE_AUTH_PROVIDER_X509XCERT_URL"),
+    "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),
+    "universe_domain": os.getenv("FIREBASE_UNIVERSE_DOMAIN"),
+})
 
 cred = credentials.Certificate(FIREBASE_INFO)
 firebase_admin.initialize_app(cred)
 
 
-def notify(title: str, body: str):
+def getUserToken(userId: int = None):
+    try:
+        if userId is None:
+            logger.warning("User ID is None")
+        else:
+            token = FcmToken.objects.select_related("uid").get(id=userId).token
+            return token
+    except User.DoesNotExist:
+        logger.warning("User.DoesNotExist")
+
+
+def notify(title: str, body: str, userId: int = None):
+    token = getUserToken(userId=userId)
+    logger.info(token)
     message = messaging.Message(
         notification=messaging.Notification(
             title=title,
             body=body
         ),
-        token=os.getenv("FCM_DEVICE_TOKEN")
+        data={
+            "petname": "Cat1"
+        },
+        # topic="flutter_notification",
+        token=token
     )
     response = messaging.send(message)
-    print('Successfully sent message:', response)
+    logger.info(f'Successfully sent message User:{userId} Response:{response}')
 
 
 def httpNotify(title: str, body: str):
@@ -44,3 +81,7 @@ def httpNotify(title: str, body: str):
     response = requests.post('https://fcm.googleapis.com/v1/projects/petmonitoringsystem-729da/messages:send',
                              data=json.dumps(message), headers=headers)
     print(response.text)
+
+
+if '__main__' == __name__:
+    notify("TEST", "Python SDK", 1)
