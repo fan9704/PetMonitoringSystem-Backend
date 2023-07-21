@@ -55,3 +55,8 @@ class Record(models.Model):
 
     def __str__(self):
         return f'數據{self.data}'
+
+
+class FcmToken(models.Model):
+    uid = models.ForeignKey(User, db_column="uid", on_delete=models.CASCADE, verbose_name='使用者ID')
+    token = models.CharField(max_length=255, null=True, verbose_name="Fcm_Token")

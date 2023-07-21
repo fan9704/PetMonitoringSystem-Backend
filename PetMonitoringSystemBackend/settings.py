@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    # 'django_seed',
     # 'django_elasticsearch_dsl',
     'corsheaders',
     'django_redis',
@@ -168,7 +169,7 @@ TIME_ZONE = 'Asia/Taipei'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-DEFAULT_CHARSET = 'latin-1'
+DEFAULT_CHARSET = 'utf-8' #'latin-1'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = '/static/'
@@ -297,20 +298,51 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 # Firebase Configuration
-FIREBASE_INFO = dict({
-    "type": os.getenv("FIREBASE_TYPE"),
-    "project_id": os.getenv("FIREBASE_PROJECT_ID"),
-    "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
-    "private_key": os.getenv("FIREBASE_PRIVATE_KEY"),
-    "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
-    "client_id": os.getenv("FIREBASE_CLIENT_ID"),
-    "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
-    "token_uri": os.getenv("FIREBASE_TOEKN_URI"),
-    "auth_provider_x509_cert_url": os.getenv("FIREBASE_AUTH_PROVIDER_X509XCERT_URL"),
-    "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),
-    "universe_domain": os.getenv("FIREBASE_UNIVERSE_DOMAIN"),
-})
-
+FIREBASE_CONFIG_PATH = os.path.join(BASE_DIR, 'firebase.json')
+if os.path.exists(FIREBASE_CONFIG_PATH):
+    with open(FIREBASE_CONFIG_PATH) as f:
+        FIREBASE_INFO = f.read()
+else:
+    FIREBASE_INFO = dict({
+        "type": os.getenv("FIREBASE_TYPE","service_account"),
+        "project_id": os.getenv("FIREBASE_PROJECT_ID","petmonitoringsystem-729da"),
+        "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID","e6dd9c92522e7452207399be3a6d09d879caa254"),
+        "private_key": os.getenv("FIREBASE_PRIVATE_KEY",'''-----BEGIN PRIVATE KEY-----
+    MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDIjBYfrSAUWGBo
+    Tnd4b7f84Nlv7BSlCwmWdkFO6n1Hp5Ja9bUOPJJvbjqpA2gsNzVbLCGqsM1xTAGA
+    2CYD91nvISTvO6ty50IET7AU+Sn/Q/NWeuOMcPQVxmcDvehaXdcmHu+Und/Rz86+
+    cuN6LBpHNTQSUxdFIfyzi4N5VObhuCgYSF/rNFWKCC6rYbt/6GNHc2l7bAyzygKf
+    OUM/wnIUtfiRLzFYDEwqV5xYwypaRdjchwrI93hcRpZD1ThOqkKJLCntQ1v2gbKP
+    TTCKtU6Qr6t+uomvEX8KHHTsSZ9hzJQdwQ1m1LE6RAq1GZaZgn35JxqT/1PTHNC9
+    2B+MP9bLAgMBAAECggEAVulvBRdQWcDbNxkaaZVxFSSU1w5m/AfGhfCF6R9yX8Vd
+    hhIJ/zt88tHAllKlqNPcScDcbk7lGf6ogCAsiXd/AEVK7mrbqJZUY+3tD4nUC451
+    PLtRNiIVhgJPzq1UryUQArNRfQTWZOU8YgkEUIQgd0+1W2OrKAjMrTr/JWwICzWx
+    BdEowTuSQ5oVvQ5MTqLPP1VDc2RSK8iVAQfL9TEFTAFpvEVvXnKREYmtSrhOyGMM
+    ni1BfXjRxxpsL6pMCDrXxUeQZ+OThWYxhjYAS6IwLCS45tsFqhNVtSDcMVNa3tyF
+    vLqXkeg2zGgWCFytXM/5gMBW+IRAHNhsCjm65WBnMQKBgQD2W0GzRxrLlE9ii11g
+    E/dA8TfYJrBQN52++sA1Iq43oidZ10NonVJoA7GU9CPbx2oJLL6hgkEeP1A7Gkg7
+    V4WI58lqTOHO1Yu/mgOk7M5judoUcflwT6spq9ym7BRi6JcL336QQnscuIyiU+LZ
+    AmLBixfJvV2cifZstGqlzrNflQKBgQDQZcY0fPp7rAZWRd+IrcQfPCSmAH7mQJ+O
+    o0s9aEKpRIKP9w7HDdAM9oKP/1CR5dsingunkhR6KmiZVhdB12iBmglo+eKAxYNK
+    Jo8f6MynZceS3xMnIqPcecDPsZQlZafIAtcQWFwGgNM8wCe1aSSwy8h4+gHre1UA
+    FwED/yxE3wKBgGaumq/Sz0RTSNNWK1FEgSY8ZH5fgdWtmL5lXX/IOL1PhP9ZTeto
+    x1Q7VeUz7U5Jy9SPJdXDqMimsxYvWjQBwtLRaY45BVVkhJ8T3rj7SvseF9u1tbYu
+    PrVbwNiCRe0D7REx0lrmmtHZyiROupqg9/CbvQqFN2NrzZ55hIofoXwRAoGAVU5D
+    6zp5omRRl8E0dpOC47JP4i/zwjcT2WSYqQNjvjxQIbRlNTA/SP8jhORjS8XGhQ4j
+    AS43+aYgeRwXmxkdK2gtj+4yPLodOx47mjlGhQORxVpRUcTJRLgGKD6twP0yyBn5
+    hTRWP0c+sPCLkKQAo+pXHsZgQM+UhNvly4gJzAsCgYB3zfyQUNmi2up22EQl5fD1
+    INVGazGdmQgEqlRnvz46jAMmUN7JEohuVkxHq47Q1HY9STG8B8htXImQqa/eJyq3
+    6Ptt3vmdaag3a3RXo2GZO1maNRAkxjiINWGtVexq19Y67DwvmaclbJEiosWgxftd
+    Wwetpji0uqQ2PU43B4uCow==
+    -----END PRIVATE KEY-----'''),
+        "client_email": os.getenv("FIREBASE_CLIENT_EMAIL","firebase-adminsdk-85ae8@petmonitoringsystem-729da.iam.gserviceaccount.com"),
+        "client_id": os.getenv("FIREBASE_CLIENT_ID","101784752751681660495"),
+        "auth_uri": os.getenv("FIREBASE_AUTH_URI","https://accounts.google.com/o/oauth2/auth"),
+        "token_uri": os.getenv("FIREBASE_TOEKN_URI","https://oauth2.googleapis.com/token"),
+        "auth_provider_x509_cert_url": os.getenv("FIREBASE_AUTH_PROVIDER_X509XCERT_URL","https://www.googleapis.com/oauth2/v1/certs"),
+        "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL","https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-85ae8%40petmonitoringsystem-729da.iam.gserviceaccount.com"),
+        "universe_domain": os.getenv("FIREBASE_UNIVERSE_DOMAIN","googleapis.com"),
+    })
 # Actual directory user files go to
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

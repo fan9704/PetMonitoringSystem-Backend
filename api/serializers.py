@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from api.models import Pet, PetType, Machine, RecordType, Record
+from api.models import Pet, PetType, Machine, RecordType, Record, FcmToken
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,6 +38,17 @@ class PetSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class PetUploadImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
+
+    class Meta:
+        model = Pet
+        fields = ['id', 'image']
+        read_only_fields = ('id', 'name', 'keeper', 'type', 'birthday', 'content')
+        # read_only_fields = ('id',)
+        depth = 1
+
+
 class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Machine
@@ -62,3 +73,9 @@ class RecordSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id',)
         depth = 1
+
+
+class FcmTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FcmToken
+        fields = '__all__'

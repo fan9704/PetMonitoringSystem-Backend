@@ -1,25 +1,47 @@
+import logging
+
 import firebase_admin
 import os
 import requests
 import json
-from firebase_admin import credentials
-from firebase_admin import messaging
-from PetMonitoringSystemBackend.settings import FIREBASE_INFO
+from firebase_admin import credentials, messaging
+from django.contrib.auth.models import User
+from django.conf import settings
+from api.models import FcmToken
 
-cred = credentials.Certificate(FIREBASE_INFO)
+logger = logging.getLogger(__name__)
+
+cred = credentials.Certificate(settings.FIREBASE_CONFIG_PATH)
 firebase_admin.initialize_app(cred)
 
 
-def notify(title: str, body: str):
+def getUserToken(userId: int = None):
+    try:
+        if userId is None:
+            logger.warning("User ID is None")
+        else:
+            token = FcmToken.objects.select_related("uid").get(id=userId).token
+            return token
+    except User.DoesNotExist:
+        logger.warning("User.DoesNotExist")
+
+
+def notify(title: str, body: str, userId: int = None):
+    token = getUserToken(userId=userId)
+    logger.info(token)
     message = messaging.Message(
         notification=messaging.Notification(
             title=title,
             body=body
         ),
-        token=os.getenv("FCM_DEVICE_TOKEN")
+        data={
+            "petname": "Cat1"
+        },
+        # topic="flutter_notification",
+        token=token
     )
     response = messaging.send(message)
-    print('Successfully sent message:', response)
+    logger.info(f'Successfully sent message User:{userId} Response:{response}')
 
 
 def httpNotify(title: str, body: str):
@@ -44,3 +66,7 @@ def httpNotify(title: str, body: str):
     response = requests.post('https://fcm.googleapis.com/v1/projects/petmonitoringsystem-729da/messages:send',
                              data=json.dumps(message), headers=headers)
     print(response.text)
+
+
+if '__main__' == __name__:
+    notify("TEST", "Python SDK", 1)
