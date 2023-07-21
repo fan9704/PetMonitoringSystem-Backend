@@ -4,29 +4,14 @@ import firebase_admin
 import os
 import requests
 import json
-from firebase_admin import credentials
-from firebase_admin import messaging
+from firebase_admin import credentials,messaging
 from django.contrib.auth.models import User
+from django.conf import settings
 from api.models import FcmToken
 
 logger = logging.getLogger(__name__)
 
-# from PetMonitoringSystemBackend.settings import FIREBASE_INFO
-FIREBASE_INFO = dict({
-    "type": os.getenv("FIREBASE_TYPE"),
-    "project_id": os.getenv("FIREBASE_PROJECT_ID"),
-    "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
-    "private_key": os.getenv("FIREBASE_PRIVATE_KEY"),
-    "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
-    "client_id": os.getenv("FIREBASE_CLIENT_ID"),
-    "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
-    "token_uri": os.getenv("FIREBASE_TOEKN_URI"),
-    "auth_provider_x509_cert_url": os.getenv("FIREBASE_AUTH_PROVIDER_X509XCERT_URL"),
-    "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),
-    "universe_domain": os.getenv("FIREBASE_UNIVERSE_DOMAIN"),
-})
-
-cred = credentials.Certificate(FIREBASE_INFO)
+cred = credentials.Certificate(settings.FIREBASE_INFO)
 firebase_admin.initialize_app(cred)
 
 
