@@ -4,14 +4,14 @@ import firebase_admin
 import os
 import requests
 import json
-from firebase_admin import credentials,messaging
+from firebase_admin import credentials, messaging
 from django.contrib.auth.models import User
 from django.conf import settings
 from api.models import FcmToken
 
 logger = logging.getLogger(__name__)
 
-cred = credentials.Certificate(settings.FIREBASE_INFO)
+cred = credentials.Certificate(settings.FIREBASE_CONFIG_PATH)
 firebase_admin.initialize_app(cred)
 
 

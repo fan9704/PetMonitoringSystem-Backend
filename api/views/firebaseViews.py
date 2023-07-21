@@ -1,6 +1,8 @@
 import logging
 
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -30,3 +32,28 @@ class FcmTokenAPI(APIView):
         )
         logger.info(f'Send Token Register Notify {fcmToken.uid.id}')
         return Response(serializer.data)
+
+    @swagger_auto_schema(
+        operation_summary='notify user',
+        operation_description='notify user who had register token',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'id': openapi.Schema(
+                    type=openapi.TYPE_NUMBER
+                ),
+            }
+        )
+    )
+    def patch(self, request: Request):
+        try:
+            userId = request.data.get("id")
+            notify.notify(
+                title="Notify Binding",
+                body="Success",
+                userId=userId
+            )
+            logger.info(f'Send Token Register Notify {userId}')
+            return Response({"message":"success"})
+        except models.FcmToken.DoesNotExist:
+            return Response({"error": "not found token"}, status=status.HTTP_404_NOT_FOUND)
