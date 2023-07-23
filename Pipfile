@@ -35,6 +35,7 @@ firebase-admin = "6.1.0"
 daphne = "*"
 channels-redis = "==4.1.0"
 pillow = "==8.4.0"
+django-seed = "*"
 
 [dev-packages]
 
