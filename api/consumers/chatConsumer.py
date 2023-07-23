@@ -6,15 +6,16 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 
 def get_ai_reply(message):
-    openai.api_key = os.getenv("CHATGPT_APIKEY", None)
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=message,
-        max_tokens=200,
-        n=1,
-        stop=None,
-    )
-    return response['choices'][0]['text']
+    return f'Hi {message}'
+    # openai.api_key = os.getenv("CHATGPT_APIKEY", None)
+    # response = openai.Completion.create(
+    #     engine="davinci",
+    #     prompt=message,
+    #     max_tokens=5,
+    #     n=1,
+    #     stop=None,
+    # )
+    # return response['choices'][0]['text']
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -49,12 +50,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'username': self.username,
         }))
 
+        message = get_ai_reply(message)
+
         await self.channel_layer.group_send(
             self.room_name,
             {
                 'type': 'chat_message',
                 'message': message,
-                'username': self.username,
+                'username': 'System',
             }
         )
 
