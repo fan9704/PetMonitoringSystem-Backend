@@ -21,16 +21,16 @@ class FcmTokenAPI(APIView):
         request_body=FcmTokenSerializer
     )
     def post(self, request: Request):
-        fcmToken = models.FcmToken.objects.create(uid_id=request.data.get("uid"), token=request.data.get("token"))
-        serializer = FcmTokenSerializer(fcmToken)
+        fcm_token = models.FcmToken.objects.create(uid_id=request.data.get("uid"), token=request.data.get("token"))
+        serializer = FcmTokenSerializer(fcm_token)
         # Send Notify let user now register success
 
         notify.notify(
             title="Notify Binding",
             body="Success",
-            userId=fcmToken.uid.id
+            userId=fcm_token.uid.id
         )
-        logger.info(f'Send Token Register Notify {fcmToken.uid.id}')
+        logger.info(f'Send Token Register Notify {fcm_token.uid.id}')
         return Response(serializer.data)
 
     @swagger_auto_schema(
@@ -47,13 +47,13 @@ class FcmTokenAPI(APIView):
     )
     def patch(self, request: Request):
         try:
-            userId = request.data.get("id")
+            user_id = request.data.get("id")
             notify.notify(
                 title="Notify Binding",
                 body="Success",
-                userId=userId
+                userId=user_id
             )
-            logger.info(f'Send Token Register Notify {userId}')
-            return Response({"message":"success"})
+            logger.info(f'Send Token Register Notify {user_id}')
+            return Response({"message": "success"})
         except models.FcmToken.DoesNotExist:
             return Response({"error": "not found token"}, status=status.HTTP_404_NOT_FOUND)
