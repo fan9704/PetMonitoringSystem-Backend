@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.models import User
 from django.contrib import auth
 from drf_yasg import openapi
@@ -5,6 +7,10 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from api.serializers import UserSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class Register(APIView):
@@ -30,17 +36,16 @@ class Register(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get('email')
-        print(username, email, password)
         user = User.objects.filter(email=email)
-        print(user)
 
         if not user.exists():
             user = User.objects.create_user(username, email, password)
-            print("success")
+            serializer = UserSerializer(user)
+            logger.info(f"User {user.username} register success")
             return Response({
                 "status": "success",
                 "register": True,
-                "user": userResponseConverter(user)
+                "user": serializer.data
             }, status=status.HTTP_200_OK)
         else:
             return Response(
@@ -52,57 +57,6 @@ class Register(APIView):
             )
 
 
-# class LoginAPI(APIView):
-#     @swagger_auto_schema(
-#         operation_summary='Login',
-#         operation_description='User Login',
-#         request_body=openapi.Schema(
-#             type=openapi.TYPE_OBJECT,
-#             properties={
-#                 'username': openapi.Schema(
-#                     type=openapi.TYPE_STRING
-#                 ),
-#                 'password': openapi.Schema(
-#                     type=openapi.TYPE_STRING
-#                 )
-#             }
-#         )
-#     )
-#     def post(self, request, *args, **kwargs):
-#         data = request.data
-#         username = data.get("username", "")
-#         password = data.get("password", "")
-#         user = User.objects.get(username=username)
-#         print("Session", request.session.items(), "Cookie", request.COOKIES.items())
-#         try:
-#             if username == '' or password == '':
-#                 return Response(
-#                     {"status": "Failed", "login": False, "error": "Account or Password cannot be empty"},
-#                     status=status.HTTP_406_NOT_ACCEPTABLE)
-#             authedUser = auth.authenticate(username=username, password=password)
-#             if authedUser:
-#                 print(authedUser.username, "Has Authenticated")
-#                 auth.login(request, authedUser)
-#                 save = request.data.get('save', False)
-#                 print(save)
-#                 if save:
-#                     print("Session", request.session.items(), "Cookie", request.COOKIES.items())
-#                     return Response(
-#                         {"status": "success", "login": True, "User": userResponseConverter(user), "test": "ok"},
-#                         status=status.HTTP_200_OK)
-#             else:
-#                 print("User: ", userResponseConverter(user), "Login Failed")
-#                 return Response({"status": "failed", "login": False, "error": "Account or Password Error"},
-#                                 status=status.HTTP_200_OK)
-#
-#         except Exception as E:
-#             print(E)
-#             user = None
-#             print("User: ", username, "Login Failed")
-#         return Response({"status": "success", "login": True, "User": userResponseConverter(user), "test": "no"},
-#                         status=status.HTTP_200_OK)
-
-
 class LogoutAPI(APIView):
     @swagger_auto_schema(
         operation_summary='Logout',
@@ -110,7 +64,6 @@ class LogoutAPI(APIView):
     )
     def get(self, request):
         auth.logout(request)
-        print("Session", request.session.items(), "Cookie", request.COOKIES.items())
         return Response({"status": "success", "logout": True}, status=status.HTTP_200_OK)
 
 
@@ -139,11 +92,10 @@ class EditProfileAPI(APIView):
             }
         )
     )
-    # permission_classes = [IsAuthenticated]
     def put(self, request):
         username = request.data.get("username", "")
         if username != '':
-            user = User.objects.get(pk=username)
+            user = User.objects.get(username=username)
             if request.data["password"] != "":
                 password = request.data["password"]
                 user.set_password = password
@@ -162,23 +114,12 @@ class EditProfileAPI(APIView):
         else:
             return Response({"status": "error", "edit": False}, status=status.HTTP_401_UNAUTHORIZED)
 
-    # def get(self, request, pk):
-    #     user_id = pk
-    #     if user_id == '':
-    #         return Response({"info": False}, status=status.HTTP_204_NO_CONTENT)
-    #     else:
-    #         user_id = int(user_id)
-    #         user = User.objects.get(id=user_id)
-    #         return Response(userResponseConverter(user), status=status.HTTP_200_OK)
-
 
 class UserAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        userQuery = User.objects.all()
-        userList = []
-        for i in userQuery:
-            userList.append(userResponseConverter(i))
-        return Response(userList, status=status.HTTP_200_OK)
+        query_set = User.objects.all()
+        serializer = UserSerializer(query_set,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class OAuthUserRegisterAPI(APIView):
@@ -204,14 +145,14 @@ class OAuthUserRegisterAPI(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get('email')
-        print(username, email, password)
         user = User.objects.create_user(username, email, password)
-        print("OAuth User Join In DataBase")
+        serializer = UserSerializer(user)
+        logger.info(f"OAuth User {username} Email {email} Joined DataBase")
         return Response({
             "status": "success",
             "register": True,
             "Identity": "OAuth User",
-            "user": userResponseConverter(user)
+            "user": serializer.data
         }, status=status.HTTP_200_OK)
 
 
@@ -231,23 +172,11 @@ class OAuthUserLoginAPI(APIView):
     def post(self, request):
         email = request.data.get('email')
         user = User.objects.get(email=email)
-        print("OAuth User Login")
-        return Response(userResponseConverter(user), status=status.HTTP_200_OK)
-
-
-def userResponseConverter(user):
-    if user is not None:
-        result = dict(
-            id=user.id,
-            username=user.username,
-            last_login=user.last_login,
-            is_superuser=user.is_superuser,
-            last_name=user.last_name,
-            email=user.email,
-            is_staff=user.is_staff,
-            is_active=user.is_active,
-            date_joined=user.date_joined,
-            first_name=user.first_name)
-    else:
-        result = ""
-    return result
+        logger.info(f"OAuth User {user.username} Login")
+        serializer = UserSerializer(user)
+        return Response({
+            "status": "success",
+            "login": True,
+            "Identity": "OAuth User",
+            "user": serializer.data
+        }, status=status.HTTP_200_OK)
