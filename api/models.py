@@ -9,7 +9,7 @@ def upload_to(instance, filename):
 
 
 class PetType(models.Model):
-    typename = models.CharField(max_length=25, blank=True, verbose_name="寵物種類")
+    typename = models.CharField(max_length=25, null=True, blank=True, verbose_name="寵物種類")
     description = models.TextField(null=True, blank=True, verbose_name="寵物種類描述")
 
     def __str__(self):
@@ -59,4 +59,4 @@ class Record(models.Model):
 
 class FcmToken(models.Model):
     uid = models.ForeignKey(User, db_column="uid", on_delete=models.CASCADE, verbose_name='使用者ID')
-    token = models.CharField(max_length=255, blank=True, verbose_name="Fcm_Token")
+    token = models.CharField(max_length=255, null=True, blank=True, verbose_name="Fcm_Token")
