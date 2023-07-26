@@ -6,9 +6,11 @@ services:
     container_name: postgreSQL-Database
     environment:
       POSTGRES_DB: PET
-      POSTGRES_MULTIPLE_DATABASES: TEST,ZABBIX,PET
+#      POSTGRES_MULTIPLE_DATABASES: TEST,ZABBIX,PET,
       POSTGRES_USER: test
       POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   pgadmin:

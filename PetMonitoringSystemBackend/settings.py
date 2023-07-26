@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_seed',
-    # 'django_elasticsearch_dsl',
     'corsheaders',
     'django_redis',
     'drf_yasg',
@@ -169,7 +168,7 @@ TIME_ZONE = 'Asia/Taipei'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-DEFAULT_CHARSET = 'utf-8' #'latin-1'
+DEFAULT_CHARSET = 'utf-8'  # 'latin-1'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = '/static/'
