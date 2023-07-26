@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 class UserModelTest(TestCase):
     def setUp(self):
-        u1 = User.objects.create(username="u1", email="u1@gmail.com",is_superuser=True,last_name="u1",first_name="u1",is_staff=True,is_active=True)
-        u2 = User.objects.create(username="u2", email="u2@gmail.com",is_superuser=True,last_name="u2",first_name="u2",is_staff=True,is_active=True)
+        User.objects.create(username="u1", email="u1@gmail.com",is_superuser=True,last_name="u1",first_name="u1",is_staff=True,is_active=True)
+        User.objects.create(username="u2", email="u2@gmail.com",is_superuser=True,last_name="u2",first_name="u2",is_staff=True,is_active=True)
 
     def testUser(self):
         u1 = User.objects.get(username="u1")

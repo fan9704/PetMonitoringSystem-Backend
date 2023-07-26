@@ -10,7 +10,7 @@ class RecordUrlTest(TestCase):
     def testRecordListByRecordTypeAndNameURL(self):
         recordType = "weight"
         petName = "cat1"
-        url = reverse("record-listByRecordTypeAndPetName",args=[recordType,petName])
+        url = reverse("record-listByRecordTypeAndPetName", args=[recordType, petName])
         self.assertEqual(url, f"/api/record/{recordType}/{petName}/")
         logger.debug("Complete Record List By RecordType and PetName URL Test")
 

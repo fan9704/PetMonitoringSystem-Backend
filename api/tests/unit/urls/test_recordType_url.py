@@ -9,5 +9,5 @@ logger = logging.getLogger(__name__)
 class RecordTypeUrlTest(TestCase):
     def testRecordTypeListURL(self):
         url = reverse("recordType-list")
-        self.assertEqual(url, f"/api/recordType/list/")
+        self.assertEqual(url, "/api/recordType/list/")
         logger.debug("Complete RecordType List URL Test")
