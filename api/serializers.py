@@ -45,7 +45,6 @@ class PetUploadImageSerializer(serializers.ModelSerializer):
         model = Pet
         fields = ['id', 'image']
         read_only_fields = ('id', 'name', 'keeper', 'type', 'birthday', 'content')
-        # read_only_fields = ('id',)
         depth = 1
 
 

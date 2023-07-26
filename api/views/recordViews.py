@@ -26,11 +26,11 @@ class RecordByRecordType(viewsets.ViewSet):
     )
     def recordType(self, request, recordType):
         try:
-            recordTypeObject = RecordType.objects.get(type=recordType)
-            records = Record.objects.filter(type=recordTypeObject)
+            record_type = RecordType.objects.get(type=recordType)
+            records = Record.objects.filter(type=record_type)
             serializer = RecordSerializer(records, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as E:
+        except record_type.DoesNotExist:
             msg = {
                 "message": "Not found Record Type"
             }
@@ -44,9 +44,6 @@ class RecordByRecordType(viewsets.ViewSet):
     )
     def recordTypeAndPetName(self, request, recordType, petName):
         try:
-            # pet = Pet.objects.get(name=petName)
-            # recordTypeObject = RecordType.objects.get(type=recordType)
-            # records = Record.objects.filter(type=recordTypeObject,pet=pet)
             records = Record.objects.select_related('pet', 'type').filter(pet__name=petName, type__type=recordType)
             serializer = RecordSerializer(records, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)

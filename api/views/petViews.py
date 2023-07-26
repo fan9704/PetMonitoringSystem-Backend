@@ -75,10 +75,10 @@ class PetCreateAPIView(APIView):
 
 class PetCountAPIView(APIView):
     def get(self, request: Request, *args, **kwargs):
-        petDict = dict()
+        pet_dict = dict()
         for i in models.PetType.objects.all():
-            petDict[i.typename] = models.Pet.objects.filter(type=i.id).count()
-        return Response(data=petDict, status=status.HTTP_200_OK)
+            pet_dict[i.typename] = models.Pet.objects.filter(type=i.id).count()
+        return Response(data=pet_dict, status=status.HTTP_200_OK)
 
 
 class PetUploadImageAPIView(APIView):

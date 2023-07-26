@@ -6,9 +6,11 @@ services:
     container_name: postgreSQL-Database
     environment:
       POSTGRES_DB: PET
-      POSTGRES_MULTIPLE_DATABASES: TEST,ZABBIX,PET
+#      POSTGRES_MULTIPLE_DATABASES: TEST,ZABBIX,PET,
       POSTGRES_USER: test
       POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   pgadmin:
@@ -29,7 +31,7 @@ services:
     container_name: elasticsearch
     environment:
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms212m -Xmx212m"
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
       - "discovery.type=single-node"
     ulimits:
       memlock:
@@ -49,6 +51,8 @@ services:
     image: docker.elastic.co/kibana/kibana:7.9.1
     restart: always
     container_name: kibana
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=512
     ports:
       - "5601:5601"
   logstash:

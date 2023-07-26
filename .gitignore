@@ -5,6 +5,9 @@
 /Include
 /health_check_storage_test
 /__pycache__/**
-
+# System Image Storage
 /media/images/**
+# Firebase Project Settings
 #firebase.json
+# PostgreSQL Storage
+/pgdata

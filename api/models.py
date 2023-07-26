@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -7,7 +9,7 @@ def upload_to(instance, filename):
 
 
 class PetType(models.Model):
-    typename = models.CharField(max_length=256, null=True, blank=True, verbose_name="寵物種類")
+    typename = models.CharField(max_length=25, null=True, blank=True, verbose_name="寵物種類")
     description = models.TextField(null=True, blank=True, verbose_name="寵物種類描述")
 
     def __str__(self):
@@ -18,7 +20,7 @@ class Pet(models.Model):
     name = models.CharField(max_length=256, verbose_name="寵物名稱")
     keeper = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name="寵物照顧人")
     type = models.ForeignKey(to=PetType, on_delete=models.CASCADE, verbose_name="寵物種類")
-    birthday = models.DateField(verbose_name="寵物生日")
+    birthday = models.DateField(verbose_name="寵物生日", default=datetime.date.today)
     content = models.TextField(verbose_name="寵物敘述")
     image = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
@@ -51,12 +53,10 @@ class Record(models.Model):
     type = models.ForeignKey(to=RecordType, on_delete=models.CASCADE, verbose_name="記錄種類")
     data = models.FloatField(null=True, blank=True, verbose_name="數據值")
 
-    # machine = models.ForeignKey(to=Machine, on_delete=models.CASCADE, verbose_name="機器編號")
-
     def __str__(self):
         return f'數據{self.data}'
 
 
 class FcmToken(models.Model):
     uid = models.ForeignKey(User, db_column="uid", on_delete=models.CASCADE, verbose_name='使用者ID')
-    token = models.CharField(max_length=255, null=True, verbose_name="Fcm_Token")
+    token = models.CharField(max_length=255, null=True, blank=True, verbose_name="Fcm_Token")

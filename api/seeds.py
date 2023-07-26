@@ -15,7 +15,7 @@ def generatePetTypeSeedData():
     }
 
     seeder = Seed.seeder("PetType")
-    for petName,petDescription in petTypeDict.items():
+    for petName, petDescription in petTypeDict.items():
         seeder.add_entity(PetType, 1, {
             'typename': petName,
             'description': petDescription,
@@ -39,9 +39,9 @@ def generateAdminUserSeedData():
 
 def generateRecordTypeSeedData():
     seeder = Seed.seeder("RecordType")
-    recordTypeList = ["weight","water","humidity","temperature","food"]
+    recordTypeList = ["weight", "water", "humidity", "temperature", "food"]
     for i in recordTypeList:
-        seeder.add_entity(RecordType, 1,{
+        seeder.add_entity(RecordType, 1, {
             "type": i
         })
     inserted_pks = seeder.execute()
