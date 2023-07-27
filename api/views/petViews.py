@@ -68,9 +68,10 @@ class PetCreateAPIView(APIView):
         serializer = PetRequestSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             logger.info(serializer.errors)
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+            return Response(data=serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
 class PetCountAPIView(APIView):
