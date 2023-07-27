@@ -20,7 +20,7 @@ class Pet(models.Model):
     name = models.CharField(max_length=256, verbose_name="寵物名稱")
     keeper = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name="寵物照顧人")
     type = models.ForeignKey(to=PetType, on_delete=models.CASCADE, verbose_name="寵物種類")
-    birthday = models.DateField(verbose_name="寵物生日", default=datetime.date.today)
+    birthday = models.DateField(verbose_name="寵物生日", blank=True, null=True, default=datetime.date.today)
     content = models.TextField(verbose_name="寵物敘述")
     image = models.ImageField(upload_to=upload_to, blank=True, null=True)
 

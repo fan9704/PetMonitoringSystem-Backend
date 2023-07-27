@@ -28,10 +28,11 @@ class UserES(Document):
         ]
         auto_refresh = True
 
+
 @registry.register_document
 class PetTypeES(Document):
     class Index:
-        name = 'type'
+        name = 'pet_type'
         settings = {
             'number_of_shards': 1,
             'number_of_replicas': 0,
@@ -76,6 +77,7 @@ class PetES(Document):
             'content',
         ]
 
+
 @registry.register_document
 class RecordES(Document):
     pet = fields.ObjectField(properties={
@@ -115,3 +117,19 @@ class RecordES(Document):
             'data'
         ]
 
+
+@registry.register_document
+class RecordTypeES(Document):
+    class Index:
+        name = 'record_type'
+        settings = {
+            'number_of_shards': 1,
+            'number_of_replicas': 0,
+        }
+
+    class Django:
+        model = RecordType
+        fields = [
+            'id',
+            'type'
+        ]
