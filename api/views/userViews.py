@@ -19,17 +19,7 @@ class Register(APIView):
         operation_description='UserRegister',
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            properties={
-                'username': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'password': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'email': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                )
-            }
+            properties=UserSerializer
         )
     )
     def post(self, request, *args, **kwargs):
@@ -128,32 +118,34 @@ class OAuthUserRegisterAPI(APIView):
         operation_description='OAuth User Register',
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            properties={
-                'username': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'password': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'email': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-            }
+            properties=UserSerializer,
         )
     )
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get('email')
-        user = User.objects.create_user(username, email, password)
-        serializer = UserSerializer(user)
-        logger.info(f"OAuth User {username} Email {email} Joined DataBase")
-        return Response({
-            "status": "success",
-            "register": True,
-            "Identity": "OAuth User",
-            "user": serializer.data
-        }, status=status.HTTP_200_OK)
+        user = User.objects.filter(email=email)
+
+        if not user.exists():
+            user = User.objects.create_user(username, email, password)
+            serializer = UserSerializer(user)
+            logger.info(f"OAuth User {username} Email {email} Joined DataBase")
+            return Response({
+                "status": "success",
+                "register": True,
+                "Identity": "OAuth User",
+                "user": serializer.data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {
+                    "status": "failed",
+                    "register": False,
+                    "message": "Duplicate Username or Email"
+                },
+                status=status.HTTP_409_CONFLICT
+            )
 
 
 class OAuthUserLoginAPI(APIView):
