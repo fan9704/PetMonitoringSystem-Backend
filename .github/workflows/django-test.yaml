@@ -36,7 +36,7 @@ jobs:
       - name: Install Dependencies from pipenv
         run: |
           pipenv install --deploy --ignore-pipfile
-          pipenv lock -r > requirements.txt
+          pipenv lock > requirements.txt
           pip install -r requirements.txt
           rm requirements.txt  # Optional: Remove requirements.txt after installin
 #            pipenv install
