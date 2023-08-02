@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 def upload_to(instance, filename):
@@ -52,6 +53,7 @@ class Record(models.Model):
     pet = models.ForeignKey(to=Pet, on_delete=models.CASCADE, verbose_name="寵物ID")
     type = models.ForeignKey(to=RecordType, on_delete=models.CASCADE, verbose_name="記錄種類")
     data = models.FloatField(null=True, blank=True, verbose_name="數據值")
+    time = models.DateTimeField(blank=True, default=timezone.now, verbose_name="紀錄時間")
 
     def __str__(self):
         return f'數據{self.data}'

@@ -3,7 +3,7 @@ from rest_framework import status, generics, viewsets
 from rest_framework.response import Response
 
 from api.models import Record, RecordType
-from api.serializers import RecordSerializer, RecordTypeSerializer
+from api.serializers import RecordSerializer, RecordTypeSerializer, RecordRequestSerializer
 
 
 # RecordAPI
@@ -14,7 +14,7 @@ class RecordRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 class RecordListCreateView(generics.ListCreateAPIView):
     queryset = Record.objects.all()
-    serializer_class = RecordSerializer
+    serializer_class = RecordRequestSerializer
 
 
 class RecordByRecordType(viewsets.ViewSet):
