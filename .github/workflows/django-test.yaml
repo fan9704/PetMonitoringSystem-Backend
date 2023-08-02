@@ -35,7 +35,13 @@ jobs:
         run: pip install pipenv
       - name: Install Dependencies from pipenv
         run: |
-            pipenv install
+          pipenv install
+          pipenv run pip freeze > requirements.txt
+          pip install -r requirements.txt
+          rm requirements.txt
+
+      - name: Install coverage
+        run: pip install coverage
 
       - name: Django Make Migration Checking
         run: |
@@ -52,19 +58,24 @@ jobs:
 #        run: |
 #            pipenv run python manage.py search_index --create
 
-      - name: Run Unit Tests
+#      - name: Run Unit Tests
+#        run: |
+#            pipenv run python manage.py test api.tests.unit
+#
+#      - name: Run Integration Tests
+#        run: |
+#            pipenv run python manage.py test api.tests.integration
+      - name: Run Tests
         run: |
-            pipenv run python manage.py test api.tests.unit
-
-      - name: Run Integration Tests
-        run: |
-            pipenv run python manage.py test api.tests.integration
+          coverage run manage.py test
+          coverage xml -o coverage.xml
 
       - name: Sonarqube Scanning
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          EXTRA_ARGS: -Dsonar.coverageReportPaths=coverage.xml
 #      - name: DockerHub Login
 #        uses: docker/login-action@v2.1.0
 #        with:

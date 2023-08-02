@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta, timezone
 from rest_framework import serializers
 from api.models import Pet, PetType, Machine, RecordType, Record, FcmToken
 
@@ -59,7 +60,7 @@ class MachineSerializer(serializers.ModelSerializer):
 class RecordTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecordType
-        fields = ('id', 'type')
+        fields = '__all__'
         read_only_fields = ('id',)
 
 
@@ -72,6 +73,16 @@ class RecordSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id',)
         depth = 1
+
+
+class RecordRequestSerializer(serializers.ModelSerializer):
+    time = serializers.DateTimeField(
+        default=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).strftime('%Y-%m-%dT%H:%M:%S.%fZ'))
+
+    class Meta:
+        model = Record
+        fields = '__all__'
+        read_only_fields = ('id',)
 
 
 class FcmTokenSerializer(serializers.ModelSerializer):
