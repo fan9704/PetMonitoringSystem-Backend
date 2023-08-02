@@ -36,7 +36,7 @@ jobs:
       - name: Install Dependencies from pipenv
         run: |
           pipenv install
-          pipenv lock > requirements.txt
+          pipenv run freeze > requirements.txt
           pip install -r requirements.txt
           rm requirements.txt
 
