@@ -12,7 +12,7 @@ class RecordRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RecordSerializer
 
 
-class RecordListView(generics.ListAPIView):
+class RecordListCreateView(generics.ListCreateAPIView):
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
 
@@ -24,9 +24,9 @@ class RecordByRecordType(viewsets.ViewSet):
         operation_summary='搜尋紀錄透過記錄種類',
         operation_description='需要帶入RecordType參數 種類名稱',
     )
-    def recordType(self, request, recordType):
+    def recordType(self, request, record_type):
         try:
-            record_type = RecordType.objects.get(type=recordType)
+            record_type = RecordType.objects.get(type=record_type)
             records = Record.objects.filter(type=record_type)
             serializer = RecordSerializer(records, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -42,9 +42,9 @@ class RecordByRecordType(viewsets.ViewSet):
         operation_summary='搜尋紀錄透過寵物與記錄種類',
         operation_description='需要帶入RecordType與Pet參數 種類名稱',
     )
-    def recordTypeAndPetName(self, request, recordType, petName):
+    def recordTypeAndPetName(self, request, record_type, pet_name):
         try:
-            records = Record.objects.select_related('pet', 'type').filter(pet__name=petName, type__type=recordType)
+            records = Record.objects.select_related('pet', 'type').filter(pet__name=pet_name, type__type=record_type)
             serializer = RecordSerializer(records, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as E:
