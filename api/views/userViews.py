@@ -17,10 +17,7 @@ class Register(APIView):
     @swagger_auto_schema(
         operation_summary='Register',
         operation_description='UserRegister',
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties=UserSerializer
-        )
+        request_body=UserSerializer
     )
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
@@ -116,10 +113,7 @@ class OAuthUserRegisterAPI(APIView):
     @swagger_auto_schema(
         operation_summary='OAuth User Register',
         operation_description='OAuth User Register',
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties=UserSerializer,
-        )
+        request_body=UserSerializer,
     )
     def post(self, request):
         username = request.data.get("username")
