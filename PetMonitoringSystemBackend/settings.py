@@ -300,6 +300,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 # Firebase Configuration
+FIREBASE_ENABLE = os.getenv("FIREBASE_ENABLE",False)
 FIREBASE_CONFIG: dict = dict({
     "type": "service_account",
     "project_id": "petmonitoringsystem-729da",
