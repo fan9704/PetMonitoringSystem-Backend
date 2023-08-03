@@ -300,12 +300,11 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 # Firebase Configuration
-# FIREBASE_CONFIG_PATH = os.path.join(BASE_DIR, 'firebase.json')
-FIREBASE_CONFIG = dict({
+FIREBASE_CONFIG = {
     "type": "service_account",
     "project_id": "petmonitoringsystem-729da",
     "private_key_id": "e6dd9c92522e7452207399be3a6d09d879caa254",
-    "private_key": os.getenv("FIREBASE_PRIVATE_KEY", None),
+    "private_key": os.getenv("FIREBASE_PRIVATE_KEY", None).replace('\\n', '\n'),
     "client_email": "firebase-adminsdk-85ae8@petmonitoringsystem-729da.iam.gserviceaccount.com",
     "client_id": "101784752751681660495",
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -313,7 +312,7 @@ FIREBASE_CONFIG = dict({
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-85ae8%40petmonitoringsystem-729da.iam.gserviceaccount.com",
     "universe_domain": "googleapis.com"
-})
+}
 # Actual directory user files go to
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

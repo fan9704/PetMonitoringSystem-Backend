@@ -12,7 +12,7 @@ from api.models import FcmToken
 logger = logging.getLogger(__name__)
 
 cred = credentials.Certificate(settings.FIREBASE_CONFIG)
-firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(credential=cred)
 
 
 def get_user_token(user_id: int = None):
