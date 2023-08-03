@@ -13,8 +13,11 @@ import os
 import sys
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 import logstash
 
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '123456')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = ["127.0.0.1", "*", "140.125.207.230"]
+ALLOWED_HOSTS = ["127.0.0.1", "*"]
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
@@ -297,7 +300,20 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 # Firebase Configuration
-FIREBASE_CONFIG_PATH = os.path.join(BASE_DIR, 'firebase.json')
+# FIREBASE_CONFIG_PATH = os.path.join(BASE_DIR, 'firebase.json')
+FIREBASE_CONFIG = {
+    "type": "service_account",
+    "project_id": "petmonitoringsystem-729da",
+    "private_key_id": "e6dd9c92522e7452207399be3a6d09d879caa254",
+    "private_key": os.getenv("FIREBASE_PRIVATE_KEY",None),
+    "client_email": "firebase-adminsdk-85ae8@petmonitoringsystem-729da.iam.gserviceaccount.com",
+    "client_id": "101784752751681660495",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-85ae8%40petmonitoringsystem-729da.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+}
 # Actual directory user files go to
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
