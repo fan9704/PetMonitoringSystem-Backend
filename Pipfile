@@ -36,6 +36,7 @@ daphne = "*"
 channels-redis = "==4.1.0"
 pillow = "==8.4.0"
 django-seed = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
