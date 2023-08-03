@@ -14,10 +14,10 @@ import os
 import sys
 from datetime import timedelta
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import logstash
 
-load_dotenv()
+load_dotenv(find_dotenv())
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -300,7 +300,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 # Firebase Configuration
-FIREBASE_CONFIG = {
+FIREBASE_CONFIG: dict = dict({
     "type": "service_account",
     "project_id": "petmonitoringsystem-729da",
     "private_key_id": "e6dd9c92522e7452207399be3a6d09d879caa254",
@@ -312,7 +312,7 @@ FIREBASE_CONFIG = {
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-85ae8%40petmonitoringsystem-729da.iam.gserviceaccount.com",
     "universe_domain": "googleapis.com"
-}
+})
 # Actual directory user files go to
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
