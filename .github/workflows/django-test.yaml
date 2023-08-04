@@ -15,6 +15,7 @@ jobs:
         DJANGO_SECRET_KEY: "erqwer23"
         PYTHON_VERSION: "3.10"
         DOCKER_REPO: "pet-monitoring-system-backend"
+        FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code

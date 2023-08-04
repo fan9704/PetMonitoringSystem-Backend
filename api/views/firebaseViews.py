@@ -28,7 +28,7 @@ class FcmTokenAPI(APIView):
         notify.notify(
             title="Notify Binding",
             body="Success",
-            userId=fcm_token.uid.id
+            user_id=fcm_token.uid.id
         )
         logger.info(f'Send Token Register Notify {fcm_token.uid.id}')
         return Response(serializer.data)
@@ -51,7 +51,7 @@ class FcmTokenAPI(APIView):
             notify.notify(
                 title="Notify Binding",
                 body="Success",
-                userId=user_id
+                user_id=user_id
             )
             logger.info(f'Send Token Register Notify {user_id}')
             return Response({"message": "success"})
