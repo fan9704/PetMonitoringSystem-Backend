@@ -2,8 +2,9 @@ import logging
 import os
 
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
 from elasticsearch import Elasticsearch
-from api.models import Record, Pet, RecordType
+from api.models import Record, Pet, RecordType, PetType
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.update_record_es_data()
+        self.update_record_type_es_data()
         self.update_pet_es_data()
+        self.update_pet_type_es_data()
+        self.update_user_es_data()
         logger.info('Update data in Elasticsearch Complete')
 
     def update_record_es_data(self):
@@ -41,7 +45,6 @@ class Command(BaseCommand):
                 'birthday': record.pet.birthday,
                 'content': record.pet.content,
             }
-            # 使用 Elasticsearch 原生 API 更新 Document
             self.es.update(index='record', doc_type='_doc', refresh=True, id=record.id, body={"doc":{
                 'pet': pet_dict,
                 'type': type_dict,
@@ -71,5 +74,42 @@ class Command(BaseCommand):
             }
             self.es.update(index='pet', doc_type='_doc', id=pet.id, body={"doc":pet_dict})
 
+    def update_pet_type_es_data(self):
+        pet_types = PetType.objects.all()
+        for pet_type in pet_types:
+            pet_type_dict = {
+                'id': pet_type.id,
+                'typename': pet_type.typename,
+                'description': pet_type.description
+            }
+
+            self.es.update(index='pet_type', doc_type='_doc', id=pet_type.id, body={"doc":pet_type_dict})
+
     def update_record_type_es_data(self):
-        RecordType.objects.all()
+        record_types = RecordType.objects.all()
+        for record_type in record_types:
+            record_types_dict = {
+                'id': record_type.id,
+                'type': record_type.type
+            }
+            self.es.update(index='record_type', doc_type='_doc', id=record_type.id, body={"doc":record_types_dict})
+
+    def update_user_es_data(self):
+        users = User.objects.all()
+        for user in users:
+            user_dict = {
+                'id': user.id,
+                'password': user.password,
+                'last_login': user.last_login,
+                'is_superuser': user.is_superuser,
+                'username': user.username,
+                "first_name": user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'is_staff': user.is_staff,
+                'is_active': user.is_active,
+                'data_joined': user.date_joined
+
+            }
+
+            self.es.update(index='user', doc_type='_doc', refresh=True, id=user.id, body={"doc":user_dict})

@@ -32,7 +32,7 @@ class UserES(Document):
 @registry.register_document
 class PetTypeES(Document):
     class Index:
-        name = 'type'
+        name = 'pet_type'
         settings = {
             'number_of_shards': 1,
             'number_of_replicas': 0,
@@ -116,4 +116,21 @@ class RecordES(Document):
             'id',
             'data',
             'time'
+        ]
+
+
+@registry.register_document
+class RecordTypeES(Document):
+    class Index:
+        name = 'record_type'
+        settings = {
+            'number_of_shards': 1,
+            'number_of_replicas': 0,
+        }
+
+    class Django:
+        model = RecordType
+        fields = [
+            'id',
+            'type'
         ]
