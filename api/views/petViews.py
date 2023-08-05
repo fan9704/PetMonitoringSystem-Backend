@@ -160,11 +160,14 @@ def calculate_resting_energy_requirement(weight):
 
 
 def calculate_daily_energy_requirement(weight, activity_level):
-    if activity_level == 'low':
-        return 1.2 * calculate_resting_energy_requirement(weight)
-    elif activity_level == 'moderate':
-        return 1.4 * calculate_resting_energy_requirement(weight)
-    elif activity_level == 'high':
-        return 1.6 * calculate_resting_energy_requirement(weight)
-    else:
+    activity_levels = {
+        'low': 1.2,
+        'moderate': 1.4,
+        'high': 1.6,
+    }
+
+    if activity_level not in activity_levels:
         raise ValueError("Invalid activity level")
+
+    levels = activity_levels[activity_level]
+    return levels * calculate_resting_energy_requirement(weight)

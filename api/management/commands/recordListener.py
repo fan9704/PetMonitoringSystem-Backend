@@ -27,11 +27,3 @@ class Command(BaseCommand):
         # Listen Machine
         rabbitmqClient.expense("machine/status/#", machineCallBack.machineCallBack)
 
-        if recordCallBack.temperatureAndHumidityCallBack() > 27 or recordCallBack.temperatureAndHumidityCallBack() < 20:
-            raise Exception("abnormal temp")
-
-        if recordCallBack.weightCallBack() < 0:
-            raise Exception("less weight")
-
-        if recordCallBack.waterCallBack() < 0:
-            raise Exception("less water")
