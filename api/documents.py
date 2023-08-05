@@ -57,6 +57,13 @@ class PetES(Document):
     })
     type = fields.TextField(attr='type_to_string')
 
+    # 後來model新增的一些欄位
+    size = fields.TextField()
+    weight = fields.FloatField()
+    gender = fields.KeywordField()
+    is_neutered = fields.BooleanField()
+    rer = fields.FloatField()
+
     class Index:
         name = 'pet'
         settings = {
@@ -71,6 +78,11 @@ class PetES(Document):
             'name',
             'birthday',
             'content',
+            'size',
+            'weight',
+            'gender',
+            'is_neutered',
+            'rer'
         ]
 
 

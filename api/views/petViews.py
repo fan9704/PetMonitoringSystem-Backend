@@ -68,6 +68,19 @@ class PetCreateAPIView(APIView):
                 'content': openapi.Schema(
                     type=openapi.TYPE_STRING
                 ),
+                'size': openapi.Schema(
+                    type=openapi.TYPE_STRING
+                ),
+                'weight': openapi.Schema(
+                    type=openapi.TYPE_NUMBER
+                ),
+                'gender': openapi.Schema(
+                    type=openapi.TYPE_STRING
+                ),
+                'is_neutered': openapi.Schema(
+                    type=openapi.TYPE_BOOLEAN
+                ),
+
             }
         )
     )
@@ -78,16 +91,28 @@ class PetCreateAPIView(APIView):
             petTypeId = request.data.get("type", 0)
             birthday = request.data.get("birthday", datetime.date.today())
             content = request.data.get("content", "")
+            size = request.data.get("size", "")  # 取得新增欄位 size 的值
+            weight = request.data.get("weight", 0)  # 取得新增欄位 weight 的值
+            gender = request.data.get("gender", "")  # 取得新增欄位 gender 的值
+            is_neutered = request.data.get("is_neutered", False)  # 取得新增欄位 is_neutered 的值
 
             keeper = User.objects.get(pk=keeperId)
             petType = models.PetType.objects.get(pk=petTypeId)
+
+            # 計算每日熱量需求DER
+            der = calculate_daily_energy_requirement(weight)
 
             pet = models.Pet.objects.create(
                 name=name,
                 keeper=keeper,
                 type=petType,
                 birthday=birthday,
-                content=content
+                content=content,
+                size=size,  # 使用新增欄位 size 的值
+                weight=weight,  # 使用新增欄位 weight 的值
+                gender=gender,  # 使用新增欄位 gender 的值
+                is_neutered=is_neutered,  # 使用新增欄位 is_neutered 的值
+                der=der,  # 儲存計算得到的 DER
             )
             return Response(data=petResponseConverter(pet), status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -99,8 +124,8 @@ class PetCountAPIView(APIView):
     def get(self, request, *args, **kwargs):
         petDict = dict()
         for i in models.PetType.objects.all():
-            petDict[i.typename]= models.Pet.objects.filter(type=i.id).count()
-        return Response(data=petDict,status=status.HTTP_200_OK)
+            petDict[i.typename] = models.Pet.objects.filter(type=i.id).count()
+        return Response(data=petDict, status=status.HTTP_200_OK)
 
 
 def petResponseConverter(pet: models.Pet):
@@ -128,3 +153,18 @@ def petTypeResponseConverter(petType: models.PetType):
     else:
         result = ""
     return result
+
+
+def calculate_resting_energy_requirement(weight):
+    return 70 * (weight ** 0.75)
+
+
+def calculate_daily_energy_requirement(weight, activity_level):
+    if activity_level == 'low':
+        return 1.2 * calculate_resting_energy_requirement(weight)
+    elif activity_level == 'moderate':
+        return 1.4 * calculate_resting_energy_requirement(weight)
+    elif activity_level == 'high':
+        return 1.6 * calculate_resting_energy_requirement(weight)
+    else:
+        raise ValueError("Invalid activity level")

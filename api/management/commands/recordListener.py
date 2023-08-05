@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand
 from PetMonitoringSystemBackend.settings import RABBITMQ_CONFIG
+from api.management.commands.callback import recordCallBack, machineCallBack
+from api.models import Pet
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         from api.utils.Rabbitmqserver import RabbitmqServer
-        from api.management.commands.callback import recordCallBack,machineCallBack
+        from api.management.commands.callback import recordCallBack, machineCallBack
         if RABBITMQ_CONFIG["enable"]:
             rabbitmqClient = RabbitmqServer(
                 username=RABBITMQ_CONFIG["username"],
@@ -16,6 +18,7 @@ class Command(BaseCommand):
             )
 
         rabbitmqClient.connect()
+
         # Listen Record
         rabbitmqClient.expense("distance/#", recordCallBack.distanceCallBack)
         rabbitmqClient.expense("temperature/#", recordCallBack.temperatureAndHumidityCallBack)
@@ -23,3 +26,12 @@ class Command(BaseCommand):
         rabbitmqClient.expense("water/#", recordCallBack.waterCallBack)
         # Listen Machine
         rabbitmqClient.expense("machine/status/#", machineCallBack.machineCallBack)
+
+        if recordCallBack.temperatureAndHumidityCallBack() > 27 or recordCallBack.temperatureAndHumidityCallBack() < 20:
+            raise Exception("abnormal temp")
+
+        if recordCallBack.weightCallBack() < 0:
+            raise Exception("less weight")
+
+        if recordCallBack.waterCallBack() < 0:
+            raise Exception("less water")
