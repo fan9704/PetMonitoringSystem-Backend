@@ -12,6 +12,7 @@ from api.models import FcmToken
 logger = logging.getLogger(__name__)
 
 if settings.FIREBASE_ENABLE:
+    logger.info("Firebase Enabled")
     cred = credentials.Certificate(settings.FIREBASE_CONFIG)
     firebase_admin.initialize_app(credential=cred)
 

@@ -1,8 +1,7 @@
-import os
-
 from django.core.management.base import BaseCommand
 from elasticsearch_dsl import Index
-from api.documents import UserES, PetTypeES,PetES
+
+from api.documents import UserES, PetES
 
 
 class Command(BaseCommand):
