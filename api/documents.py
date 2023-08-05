@@ -28,6 +28,7 @@ class UserES(Document):
         ]
         auto_refresh = True
 
+
 @registry.register_document
 class PetTypeES(Document):
     class Index:
@@ -76,6 +77,7 @@ class PetES(Document):
             'content',
         ]
 
+
 @registry.register_document
 class RecordES(Document):
     pet = fields.ObjectField(properties={
@@ -112,6 +114,6 @@ class RecordES(Document):
         model = Record
         fields = [
             'id',
-            'data'
+            'data',
+            'time'
         ]
-

@@ -1,8 +1,11 @@
+import logging
 import os
 
 from django.core.management.base import BaseCommand
 from elasticsearch import Elasticsearch
 from api.models import Record, Pet, RecordType
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -12,6 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.update_record_es_data()
         self.update_pet_es_data()
+        logger.info('Update data in Elasticsearch Complete')
 
     def update_record_es_data(self):
         all_records = Record.objects.all()
@@ -38,14 +42,12 @@ class Command(BaseCommand):
                 'content': record.pet.content,
             }
             # 使用 Elasticsearch 原生 API 更新 Document
-            self.es.update(index='record', doc_type='_doc', id=record.id, body={
-                'doc': {
-                    'pet': pet_dict,
-                    'type': type_dict,
-                    'data': record.data,
-
-                }
-            })
+            self.es.update(index='record', doc_type='_doc', refresh=True, id=record.id, body={"doc":{
+                'pet': pet_dict,
+                'type': type_dict,
+                'time': record.time,
+                'data': record.data,
+            }})
 
     def update_pet_es_data(self):
         all_pets = Pet.objects.all()
@@ -67,9 +69,7 @@ class Command(BaseCommand):
                 'birthday': pet.birthday,
                 'content': pet.content,
             }
-            self.es.update(index='pet', doc_type='_doc', id=pet.id, body={
-                'doc': pet_dict
-            })
+            self.es.update(index='pet', doc_type='_doc', id=pet.id, body={"doc":pet_dict})
 
     def update_record_type_es_data(self):
         RecordType.objects.all()
