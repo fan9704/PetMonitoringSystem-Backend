@@ -8,6 +8,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from api.serializers import UserSerializer
+
 
 class LoginView(APIView):
     @swagger_auto_schema(
@@ -37,26 +39,9 @@ class LoginView(APIView):
             data = {
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-                'user': userResponseConverter(user)
+                'user': UserSerializer(user).data
             }
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-
-def userResponseConverter(user):
-    if user is not None:
-        result = dict(
-            id=user.id,
-            username=user.username,
-            last_login=user.last_login,
-            is_superuser=user.is_superuser,
-            last_name=user.last_name,
-            email=user.email,
-            is_staff=user.is_staff,
-            is_active=user.is_active,
-            date_joined=user.date_joined,
-            first_name=user.first_name)
-    else:
-        result = ""
-    return result

@@ -55,6 +55,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 1. [Django Logstash push logging to Kibana](https://www.mls-tech.info/python/python-django-logging-to-elk/)
 2. [Python Logger](https://www.cnblogs.com/jesse123/p/14135551.html)
 3. [Python Logging Handler](https://blog.csdn.net/yypsober/article/details/51800120)
+4. [Python Logger Produce Log File](https://shian420.pixnet.net/blog/post/350291572-%5Bpython%5D-logging-%E5%B9%AB%E4%BD%A0%E7%B4%80%E9%8C%84%E4%BB%BB%E4%BD%95%E8%A8%8A%E6%81%AF)
 
 ### Django Websocket
 
@@ -69,6 +70,10 @@ Celery -A PetMonitoringSystemBackend worker -l info
 
 1. [Seeding and Migration through Django-Seed](https://medium.com/@ardho/migration-and-seeding-in-django-3ae322952111)
 
+### Django Image Upload
+
+1. [Uploading Images to Django REST Framework from Forms in React](https://dev.to/thomz/uploading-images-to-django-rest-framework-from-forms-in-react-3jhj)
+
 ### GitHub Actions
 
 1. [GitHub Actions Push to Docker Hub](https://blog.pradumnasaraf.dev/dockerhub-githubactions)
@@ -82,3 +87,13 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Ubuntu
 
 1. [Install Python3 in Ubuntu](https://computingforgeeks.com/how-to-install-python-on-ubuntu-linux-system/)
+
+### Sonar Qube
+
+1. [Fix Container Hosting maximum memory problem](https://blog.csdn.net/weixin_39643007/article/details/108435139)
+
+### Firebase
+
+Note: FCM V1 not support post request directly should pass OAuth 2.0 Authentication
+
+1. [FCM V1 through OAuth 2.0](https://apoorv487.medium.com/testing-fcm-push-notification-http-v1-through-oauth-2-0-playground-postman-terminal-part-2-7d7a6a0e2fa0)

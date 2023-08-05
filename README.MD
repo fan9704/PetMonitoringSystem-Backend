@@ -74,6 +74,7 @@ pipenv run python manage.py migrate
 
 ```shell
 pipenv run python manage.py search_index --create
+pipenv run python manage.py search_index --populate --refresh
 ```
 
 ### Step.6 Runserver
@@ -127,9 +128,9 @@ pip freeze > requirements.txt
 ### Run Integration Test
 
 ```shell
-python manage.py test api/tests/models --pattern="*Test.py" [--verbosity 2]# Unit Test --verbosity 2 is output detail
-python manage.py test --pattern="*Test.py" #Intergration Test
-python manage.py test  #Intergration Test
+python manage.py test api.tests.unit [--verbosity 2]# Unit Test --verbosity 2 is output detail
+python manage.py test api.tests.integration #Intergration Test
+python manage.py test  #All Test
 ```
 
 ### Run with ASGI

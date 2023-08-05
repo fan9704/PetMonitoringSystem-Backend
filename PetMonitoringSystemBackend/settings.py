@@ -9,12 +9,15 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import json
 import os
 import sys
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv, find_dotenv
 import logstash
 
+load_dotenv(find_dotenv())
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '123456')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = ["127.0.0.1", "*","140.125.207.230"]
+ALLOWED_HOSTS = ["127.0.0.1", "*"]
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
@@ -53,7 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    # 'django_elasticsearch_dsl',
+    'django_seed',
     'corsheaders',
     'django_redis',
     'drf_yasg',
@@ -81,7 +84,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -168,6 +171,7 @@ TIME_ZONE = 'Asia/Taipei'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+DEFAULT_CHARSET = 'utf-8'  # 'latin-1'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = '/static/'
@@ -295,3 +299,21 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+# Firebase Configuration
+FIREBASE_ENABLE = os.getenv("FIREBASE_ENABLE",False)
+FIREBASE_CONFIG: dict = dict({
+    "type": "service_account",
+    "project_id": "petmonitoringsystem-729da",
+    "private_key_id": "e6dd9c92522e7452207399be3a6d09d879caa254",
+    "private_key": os.getenv("FIREBASE_PRIVATE_KEY", None).replace('\\n', '\n'),
+    "client_email": "firebase-adminsdk-85ae8@petmonitoringsystem-729da.iam.gserviceaccount.com",
+    "client_id": "101784752751681660495",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-85ae8%40petmonitoringsystem-729da.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+})
+# Actual directory user files go to
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

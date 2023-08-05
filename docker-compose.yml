@@ -6,9 +6,11 @@ services:
     container_name: postgreSQL-Database
     environment:
       POSTGRES_DB: PET
-      POSTGRES_MULTIPLE_DATABASES: TEST,ZABBIX,PET
+#      POSTGRES_MULTIPLE_DATABASES: TEST,ZABBIX,PET,
       POSTGRES_USER: test
       POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   pgadmin:
@@ -25,10 +27,11 @@ services:
       - "db:pgsql-server"
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    restart: always
     container_name: elasticsearch
     environment:
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms212m -Xmx212m"
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
       - "discovery.type=single-node"
     ulimits:
       memlock:
@@ -46,11 +49,15 @@ services:
       - "9300:9300"
   kibana:
     image: docker.elastic.co/kibana/kibana:7.9.1
+    restart: always
     container_name: kibana
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=512
     ports:
       - "5601:5601"
   logstash:
     image: docker.elastic.co/logstash/logstash-oss:7.9.1
+    restart: always
     container_name: logstash
 #    volumes:
 #      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
@@ -109,59 +116,59 @@ services:
 #      - "3000:3000"
 #    depends_on:
 #      - prometheus
-  zabbix-server:
-    image: zabbix/zabbix-server-pgsql:latest
-    environment:
-      DB_SERVER_HOST: db
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: ZABBIX
-    ports:
-      - "10051:10051"
-    volumes:
-      - ./zabbix/alertscripts:/usr/lib/zabbix/alertscripts
-      - ./zabbix/externalscripts:/usr/lib/zabbix/externalscripts
-      - ./zabbix/modules:/var/lib/zabbix/modules
-      - ./zabbix/enc:/var/lib/zabbix/enc
-      - ./zabbix/ssh_keys:/var/lib/zabbix/ssh_keys
-      - ./zabbix/mibs:/var/lib/zabbix/mibs
-      - ./zabbix/ssl/certs:/etc/zabbix/ssl/certs:ro
-      - ./zabbix/ssl/keys:/etc/zabbix/ssl/keys:ro
-      - ./zabbix/ssl/ca:/etc/zabbix/ssl/ca:ro
-    restart: unless-stopped
-
-  zabbix-web:
-    image: zabbix/zabbix-web-nginx-pgsql:latest
-    environment:
-      DB_SERVER_HOST: db
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: ZABBIX
-    ports:
-      - "80:80"
-    volumes:
-      - ./zabbix/alertscripts:/usr/lib/zabbix/alertscripts
-      - ./zabbix/externalscripts:/usr/lib/zabbix/externalscripts
-      - ./zabbix/modules:/var/lib/zabbix/modules
-      - ./zabbix/enc:/var/lib/zabbix/enc
-      - ./zabbix/ssh_keys:/var/lib/zabbix/ssh_keys
-      - ./zabbix/mibs:/var/lib/zabbix/mibs
-      - ./zabbix/ssl/certs:/etc/zabbix/ssl/certs:ro
-      - ./zabbix/ssl/keys:/etc/zabbix/ssl/keys:ro
-      - ./zabbix/ssl/ca:/etc/zabbix/ssl/ca:ro
-    restart: unless-stopped
-
-  zabbix-agent:
-    image: zabbix/zabbix-agent:latest
-    environment:
-      ZBX_HOSTNAME: zabbix-agent
-      ZBX_SERVER_HOST: zabbix-server
-      ZBX_SERVER_PORT: "10051"
-      ZBX_ENABLE_REMOTE_COMMANDS: "1"
-    volumes:
-      - /:/mnt/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
+#  zabbix-server:
+#    image: zabbix/zabbix-server-pgsql:latest
+#    environment:
+#      DB_SERVER_HOST: db
+#      POSTGRES_USER: test
+#      POSTGRES_PASSWORD: 123456
+#      POSTGRES_DB: ZABBIX
+#    ports:
+#      - "10051:10051"
+#    volumes:
+#      - ./zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+#      - ./zabbix/externalscripts:/usr/lib/zabbix/externalscripts
+#      - ./zabbix/modules:/var/lib/zabbix/modules
+#      - ./zabbix/enc:/var/lib/zabbix/enc
+#      - ./zabbix/ssh_keys:/var/lib/zabbix/ssh_keys
+#      - ./zabbix/mibs:/var/lib/zabbix/mibs
+#      - ./zabbix/ssl/certs:/etc/zabbix/ssl/certs:ro
+#      - ./zabbix/ssl/keys:/etc/zabbix/ssl/keys:ro
+#      - ./zabbix/ssl/ca:/etc/zabbix/ssl/ca:ro
+#    restart: unless-stopped
+#
+#  zabbix-web:
+#    image: zabbix/zabbix-web-nginx-pgsql:latest
+#    environment:
+#      DB_SERVER_HOST: db
+#      POSTGRES_USER: test
+#      POSTGRES_PASSWORD: 123456
+#      POSTGRES_DB: ZABBIX
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - ./zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+#      - ./zabbix/externalscripts:/usr/lib/zabbix/externalscripts
+#      - ./zabbix/modules:/var/lib/zabbix/modules
+#      - ./zabbix/enc:/var/lib/zabbix/enc
+#      - ./zabbix/ssh_keys:/var/lib/zabbix/ssh_keys
+#      - ./zabbix/mibs:/var/lib/zabbix/mibs
+#      - ./zabbix/ssl/certs:/etc/zabbix/ssl/certs:ro
+#      - ./zabbix/ssl/keys:/etc/zabbix/ssl/keys:ro
+#      - ./zabbix/ssl/ca:/etc/zabbix/ssl/ca:ro
+#    restart: unless-stopped
+#
+#  zabbix-agent:
+#    image: zabbix/zabbix-agent:latest
+#    environment:
+#      ZBX_HOSTNAME: zabbix-agent
+#      ZBX_SERVER_HOST: zabbix-server
+#      ZBX_SERVER_PORT: "10051"
+#      ZBX_ENABLE_REMOTE_COMMANDS: "1"
+#    volumes:
+#      - /:/mnt/hostfs:ro
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    restart: unless-stopped
 
 
 

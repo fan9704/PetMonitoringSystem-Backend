@@ -10,6 +10,7 @@ logger = logging.getLogger("Rabbitmq Configuration")
 
 class RabbitmqServer(object):
     def __init__(self, username: str, password: str, serverip: str, port: str, virtual_host: str):
+        self.channel = None
         self.username = username
         self.password = password
         self.serverip = serverip
@@ -18,32 +19,32 @@ class RabbitmqServer(object):
 
     def connect(self):
         logger.info("Connect to Server")
-        userPassword = pika.PlainCredentials(self.username, self.password)
+        user_password = pika.PlainCredentials(self.username, self.password)
         logger.info("Create MQ")
         logger.info("%s,%s,%s,%s,%s" % (self.virtual_host, self.serverip, self.port, self.password, self.username))
 
         s_conn = pika.BlockingConnection(
-            pika.ConnectionParameters(host=self.serverip, port=self.port, credentials=userPassword)
+            pika.ConnectionParameters(host=self.serverip, port=self.port, credentials=user_password)
         )
 
         logger.info("Create Channel")
         self.channel = s_conn.channel()
         logger.info("Connect Successful")
 
-    def produceMessage(self, queueName, message):
-        self.channel.queue_declare(queue=queueName, durable=True)
+    def produce_message(self, queue_name, message):
+        self.channel.queue_declare(queue=queue_name, durable=True)
         self.channel.basic_publish(
             exchange="",
-            routing_key=queueName,
+            routing_key=queue_name,
             body=message,
             properties=pika.BasicProperties(delivery_mode=2, )  # Message Persist
         )
 
-    def expense(self, queueName, func):
-        self.channel.queue_declare(queue=queueName, durable=True)# Optional
+    def expense(self, queue_name, func):
+        self.channel.queue_declare(queue=queue_name, durable=True)  # Optional
         self.channel.basic_qos(prefetch_count=1)
         self.channel.basic_consume(
-            queue=queueName,
+            queue=queue_name,
             on_message_callback=func,
             auto_ack=True,
         )
@@ -51,24 +52,24 @@ class RabbitmqServer(object):
 
 
 def callback(ch, method, properties, body):
-    print("[Consumer] Received %r", body)
+    logger.info("[Consumer] Received %r", body)
     time.sleep(1)
-    print("[Consumer] Done")
+    logger.info("[Consumer] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-# if RABBITMQ_CONFIG["enable"]:
-#     RabbitmqClient = RabbitmqServer(
-#         username=RABBITMQ_CONFIG["username"],
-#         password=RABBITMQ_CONFIG["password"],
-#         serverip=RABBITMQ_CONFIG["serverip"],
-#         port=RABBITMQ_CONFIG["port"],
-#         virtual_host=RABBITMQ_CONFIG["vhost"]
-#     )
-# RabbitmqClient.connect()
-# if __name__ == "__main__":
-#     import json
-#
-#     data = {"code": 3}
-#     RabbitmqClient.produceMessage("hello", json.dumps(data))
-#     RabbitmqClient.expense("hello", callback)
+if RABBITMQ_CONFIG["enable"]:
+    RabbitmqClient = RabbitmqServer(
+        username=RABBITMQ_CONFIG["username"],
+        password=RABBITMQ_CONFIG["password"],
+        serverip=RABBITMQ_CONFIG["serverip"],
+        port=RABBITMQ_CONFIG["port"],
+        virtual_host=RABBITMQ_CONFIG["vhost"]
+    )
+RabbitmqClient.connect()
+if __name__ == "__main__":
+    import json
+
+    data = {"code": 3}
+    RabbitmqClient.produce_message("hello", json.dumps(data))
+    RabbitmqClient.expense("hello", callback)

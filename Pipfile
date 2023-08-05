@@ -34,7 +34,9 @@ paho-mqtt = "*"
 firebase-admin = "6.1.0"
 daphne = "*"
 channels-redis = "==4.1.0"
-#amqp = "5.1.1"
+pillow = "==8.4.0"
+django-seed = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

@@ -1,19 +1,20 @@
-import datetime
-import time
+import logging
 
-from django.contrib.auth.models import User
-from django.contrib import auth
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets, mixins, generics
+from rest_framework import status, generics
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from api import models
-from api.serializers import PetSerializer, PetTypeSerializer
+from api.models import Pet
+from api.serializers import PetSerializer, PetTypeSerializer, PetRequestSerializer, PetUploadImageSerializer
 
 # Pet Type API
-from api.views.userViews import userResponseConverter
+
+logger = logging.getLogger(__name__)
 
 
 class PetTypeRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -29,8 +30,9 @@ class PetTypeCLAPIView(generics.ListCreateAPIView):
 # Pet API
 
 class PetRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     queryset = models.Pet.objects.all()
-    serializer_class = PetSerializer
+    serializer_class = PetRequestSerializer
 
 
 class PetListView(generics.ListAPIView):
@@ -39,90 +41,42 @@ class PetListView(generics.ListAPIView):
 
 
 class PetQueryListView(APIView):
-    def get(self, request, pet_type):
+    def get(self, request: Request, pet_type):
         pets = models.Pet.objects.filter(type__typename=pet_type)
         serializer = PetSerializer(pets, many=True)
         return Response(serializer.data)
 
 
 class PetCreateAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
     @swagger_auto_schema(
         operation_id='建立寵物',
         operation_summary='Create Pet',
         operation_description='Create Pet type and keeper should enter their ID',
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'name': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'keeper': openapi.Schema(
-                    type=openapi.TYPE_NUMBER
-                ),
-                'type': openapi.Schema(
-                    type=openapi.TYPE_NUMBER
-                ),
-                'birthday': openapi.Schema(
-                    type=openapi.FORMAT_DATE
-                ),
-                'content': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'size': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'weight': openapi.Schema(
-                    type=openapi.TYPE_NUMBER
-                ),
-                'gender': openapi.Schema(
-                    type=openapi.TYPE_STRING
-                ),
-                'is_neutered': openapi.Schema(
-                    type=openapi.TYPE_BOOLEAN
-                ),
-
-            }
-        )
-    )
-    def post(self, request, *args, **kwargs):
-        try:
-            name = request.data.get("name", "")
-            keeperId = request.data.get("keeper", 0)
-            petTypeId = request.data.get("type", 0)
-            birthday = request.data.get("birthday", datetime.date.today())
-            content = request.data.get("content", "")
-            size = request.data.get("size", "")  # 取得新增欄位 size 的值
-            weight = request.data.get("weight", 0)  # 取得新增欄位 weight 的值
-            gender = request.data.get("gender", "")  # 取得新增欄位 gender 的值
-            is_neutered = request.data.get("is_neutered", False)  # 取得新增欄位 is_neutered 的值
-
-            keeper = User.objects.get(pk=keeperId)
-            petType = models.PetType.objects.get(pk=petTypeId)
-
-            # 計算每日熱量需求DER
-            der = calculate_daily_energy_requirement(weight)
-
-            pet = models.Pet.objects.create(
-                name=name,
-                keeper=keeper,
-                type=petType,
-                birthday=birthday,
-                content=content,
-                size=size,  # 使用新增欄位 size 的值
-                weight=weight,  # 使用新增欄位 weight 的值
-                gender=gender,  # 使用新增欄位 gender 的值
-                is_neutered=is_neutered,  # 使用新增欄位 is_neutered 的值
-                der=der,  # 儲存計算得到的 DER
+        request_body=PetRequestSerializer,
+        manual_parameters=[
+            openapi.Parameter(
+                name='image',
+                in_=openapi.IN_FORM,
+                description='上傳的圖片',
+                type=openapi.TYPE_FILE
             )
-            return Response(data=petResponseConverter(pet), status=status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e)
-            return Response(data=None, status=status.HTTP_404_NOT_FOUND)
+        ],
+    )
+    def post(self, request: Request, *args, **kwargs):
+        serializer = PetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            logger.info(serializer.errors)
+            return Response(data=serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
 class PetCountAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        petDict = dict()
+    def get(self, request: Request, *args, **kwargs):
+        pet_dict = dict()
         for i in models.PetType.objects.all():
             petDict[i.typename] = models.Pet.objects.filter(type=i.id).count()
         return Response(data=petDict, status=status.HTTP_200_OK)
@@ -171,3 +125,33 @@ def calculate_daily_energy_requirement(weight, activity_level):
 
     levels = activity_levels[activity_level]
     return levels * calculate_resting_energy_requirement(weight)
+            pet_dict[i.typename] = models.Pet.objects.filter(type=i.id).count()
+        return Response(data=pet_dict, status=status.HTTP_200_OK)
+
+
+class PetUploadImageAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    @swagger_auto_schema(
+        operation_id='上傳寵物照片',
+        operation_summary='Upload Pet Image',
+        operation_description='Upload Pet Image By ID',
+        request_body=PetUploadImageSerializer,
+        manual_parameters=[
+            openapi.Parameter(
+                name='image',
+                in_=openapi.IN_FORM,
+                description='上傳的圖片',
+                type=openapi.TYPE_FILE
+            )
+        ],
+    )
+    def post(self, request: Request, pk: int):
+        try:
+            pet = models.Pet.objects.get(pk=pk)
+        except Pet.DoesNotExist:
+            logger.warning("Pet Upload Image Pet not found")
+            return Response(data={'error': 'Pet not found'}, status=status.HTTP_404_NOT_FOUND)
+        pet.image = request.FILES.get("image")
+        pet.save()
+        return Response(data=PetSerializer(pet).data, status=status.HTTP_200_OK
