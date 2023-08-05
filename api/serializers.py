@@ -17,15 +17,36 @@ class PetTypeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class PetSerializer(serializers.ModelSerializer):
-    keeper = UserSerializer()
-    type = PetTypeSerializer()
+class PetRequestSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
 
     class Meta:
         model = Pet
-        fields = '__all__'
+        fields = ['id', 'name', 'keeper', 'type', 'birthday', 'content', 'image', 'size', 'weight', 'gender', 'is_neutered']
+        read_only_fields = ('id',)
+
+
+class PetSerializer(serializers.ModelSerializer):
+    keeper = UserSerializer()
+    type = PetTypeSerializer()
+    image = serializers.ImageField(required=False)
+
+    class Meta:
+        model = Pet
+        fields = ['id', 'name', 'keeper', 'type', 'birthday', 'content', 'image', 'size', 'weight', 'gender', 'is_neutered']
         read_only_fields = ('id',)
         depth = 1
+
+
+class PetUploadImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
+
+    class Meta:
+        model = Pet
+        fields = ['id', 'image']
+        read_only_fields = ('id', 'name', 'keeper', 'type', 'birthday', 'content', 'size', 'weight', 'gender', 'is_neutered')
+        depth = 1
+
 
 
 class MachineSerializer(serializers.ModelSerializer):
