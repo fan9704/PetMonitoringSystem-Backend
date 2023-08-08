@@ -125,8 +125,6 @@ def calculate_daily_energy_requirement(weight, activity_level):
 
     levels = activity_levels[activity_level]
     return levels * calculate_resting_energy_requirement(weight)
-            pet_dict[i.typename] = models.Pet.objects.filter(type=i.id).count()
-        return Response(data=pet_dict, status=status.HTTP_200_OK)
 
 
 class PetUploadImageAPIView(APIView):
