@@ -5,21 +5,28 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from elasticsearch import Elasticsearch
 from api.models import Record, Pet, RecordType, PetType
+from dotenv import load_dotenv, find_dotenv
 
 logger = logging.getLogger(__name__)
+load_dotenv(find_dotenv())
 
 
 class Command(BaseCommand):
     help = 'Update data in Elasticsearch'
     es = Elasticsearch(hosts=os.getenv("ELASTICSEARCH_ENDPOINT"))
+    es_enabled = os.getenv("ELASTICSEARCH_ENABLE",False)
+
 
     def handle(self, *args, **kwargs):
-        self.update_record_es_data()
-        self.update_record_type_es_data()
-        self.update_pet_es_data()
-        self.update_pet_type_es_data()
-        self.update_user_es_data()
-        logger.info('Update data in Elasticsearch Complete')
+        if self.es_enabled:
+            self.update_record_es_data()
+            self.update_record_type_es_data()
+            self.update_pet_es_data()
+            self.update_pet_type_es_data()
+            self.update_user_es_data()
+            logger.info('Update data in Elasticsearch Complete')
+        else:
+            logger.info("Elasticsearch is Closed")
 
     def update_record_es_data(self):
         all_records = Record.objects.all()
