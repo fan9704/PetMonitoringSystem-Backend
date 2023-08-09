@@ -1,5 +1,9 @@
+import logging
+
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
+
+logger = logging.getLogger(__name__)
 
 
 class NotifyConsumer(AsyncJsonWebsocketConsumer):
@@ -10,9 +14,9 @@ class NotifyConsumer(AsyncJsonWebsocketConsumer):
         self.room_group_name = None
 
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['username']
+        self.room_name = self.scope.get('url_route', {}).get('kwargs', {}).get('username')
         self.room_group_name = 'notify_%s' % self.room_name
-
+        logger.info("Connected")
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -21,6 +25,7 @@ class NotifyConsumer(AsyncJsonWebsocketConsumer):
         await self.loadPreviousMessages()
 
     async def disconnect(self, close_code):
+        logger.info(f"Disconnected {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -28,27 +33,17 @@ class NotifyConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None, **kwargs):
         data = json.loads(text_data)
-        print(data)
+        logger.info(f"Receive Data {data}")
 
         response = {
             'message': 'Hello, World!',
             'data': data["message"]
         }
-        # await self.send_json(response)
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            response
-        )
-
-    async def chat_message(self, event):
-        message = event['message']
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
+        await self.send(text_data=json.dumps(response))
 
     async def loadPreviousMessages(self):
-        msgList = ['Message 1', 'Message 2', 'Message 3']
-        for message in msgList:
+        msg_list = ['Message 1', 'Message 2', 'Message 3']
+        for message in msg_list:
             await self.send(text_data=json.dumps({
                 'message': message
             }))

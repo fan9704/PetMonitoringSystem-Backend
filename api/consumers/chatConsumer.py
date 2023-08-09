@@ -1,8 +1,11 @@
 import json
+import logging
 import os
 
 import openai
 from channels.generic.websocket import AsyncWebsocketConsumer
+
+logger = logging.getLogger(__name__)
 
 
 def get_ai_reply(message):
@@ -25,7 +28,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.username = None
 
     async def connect(self):
-        self.username = self.scope['url_route']['kwargs']['username']
+        self.username = self.scope["path"].split('/')[-2]
         self.room_name = f'chat_{self.username}'
 
         await self.channel_layer.group_add(
@@ -44,7 +47,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
+        logger.info(f"User Message {self.username}")
         await self.send(text_data=json.dumps({
             'message': message,
             'username': self.username,

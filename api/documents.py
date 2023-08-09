@@ -114,7 +114,8 @@ class RecordES(Document):
         model = Record
         fields = [
             'id',
-            'data'
+            'data',
+            'time'
         ]
 
 
