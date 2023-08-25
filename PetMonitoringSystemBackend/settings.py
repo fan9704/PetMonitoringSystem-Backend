@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '123456')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = ["127.0.0.1", "*"]
+ALLOWED_HOSTS = ["127.0.0.1", "*",'.vercel.app']
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
@@ -130,6 +130,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv("POSTGRES_DB", "PET"),
+        'TEST':{
+            'NAME':os.getenv("POSTGRES_TEST_DB","TEST")
+        },
         'USER': os.getenv("POSTGRES_USER", "test"),
         'PASSWORD': os.getenv("POSTGRES_PASSWORD", "123456"),
         'HOST': os.getenv("POSTGRES_DB_URL", "127.0.0.1"),
