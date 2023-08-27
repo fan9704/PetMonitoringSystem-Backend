@@ -16,7 +16,9 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
 import logstash
+import logging
 
+logger = logging.getLogger(__name__)
 load_dotenv(find_dotenv())
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '123456')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = ["127.0.0.1", "*",'.vercel.app']
+ALLOWED_HOSTS = ["127.0.0.1", "*", '.vercel.app']
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
@@ -61,26 +63,26 @@ INSTALLED_APPS = [
     'django_redis',
     'drf_yasg',
     'channels',
-
-    # 'django_forest',
-    # 'django_prometheus',
+    'graphene_django',
 
     'health_check',  # required
     'health_check.db',  # stock Django health checkers
     'health_check.cache',
     'health_check.storage',
     'health_check.contrib.migrations',
-    # 'health_check.contrib.rabbitmq',  # requires RabbitMQ broker
     'health_check.contrib.redis',  # requires Redis
 
     'api',
     'ws',
 ]
 if os.getenv("ELASTICSEARCH_ENABLE", False):
+    logger.info("Enable Elasticsearch")
     INSTALLED_APPS += ['django_elasticsearch_dsl', ]
+if os.getenv("FOREST_ENABLE", False):
+    logger.info("Enable Forest Admin")
+    INSTALLED_APPS += ['django_forest', ]
 
 MIDDLEWARE = [
-    # 'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,9 +90,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'django_prometheus.middleware.PrometheusAfterMiddleware'
+
 ]
 
+if os.getenv("PROMETHEUS_ENABLE", False):
+    INSTALLED_APPS += ['django_prometheus', ]
+    MIDDLEWARE.insert(0, 'django_prometheus.middleware.PrometheusBeforeMiddleware')
+    MIDDLEWARE += [
+        'django_prometheus.middleware.PrometheusAfterMiddleware',
+    ]
 ROOT_URLCONF = 'PetMonitoringSystemBackend.urls'
 
 TEMPLATES = [
@@ -130,8 +138,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv("POSTGRES_DB", "PET"),
-        'TEST':{
-            'NAME':os.getenv("POSTGRES_TEST_DB","TEST")
+        'TEST': {
+            'NAME': os.getenv("POSTGRES_TEST_DB", "TEST")
         },
         'USER': os.getenv("POSTGRES_USER", "test"),
         'PASSWORD': os.getenv("POSTGRES_PASSWORD", "123456"),
@@ -262,6 +270,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     )
 
+}
+GRAPHENE = {
+    'SCHEMA': 'PetMonitoringSystemBackend.schema.schema',
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
