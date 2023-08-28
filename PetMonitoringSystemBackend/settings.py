@@ -73,7 +73,6 @@ INSTALLED_APPS = [
     'health_check.contrib.redis',  # requires Redis
 
     'api',
-    'ws',
 ]
 if os.getenv("ELASTICSEARCH_ENABLE", False):
     logger.info("Enable Elasticsearch")
