@@ -28,7 +28,7 @@ from rest_framework_simplejwt.views import (
 from rest_framework_simplejwt.views import TokenVerifyView
 from django.conf import settings
 from django.conf.urls.static import static
-
+# from graphene_django.views import GraphQLView
 
 def return_static(request, path, insecure=True, **kwargs):
     return serve(request, path, insecure=True, **kwargs)
@@ -49,7 +49,6 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('ws/', include('ws.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
@@ -61,6 +60,7 @@ urlpatterns = [
     path('health/', include('health_check.urls')),
     re_path(r'^static/(?P<path>.*)$', return_static, name='static'),
 
+    # path('graphql/', GraphQLView.as_view(graphiql=True)),
     # path('forest/', include('django_forest.urls')),
     # path('metrics/', include(prometheus_urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
