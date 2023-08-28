@@ -13,10 +13,10 @@ class PetUrlTest(TestCase):
         logger.debug("Complete Pet List URL Test")
 
     def testPetListByTypeURL(self):
-        petType = "cat"
-        url = reverse("pet-listByType", args=[petType])
+        pet_type = "cat"
+        url = reverse("pet-listByType", args=[pet_type])
         print(url)
-        self.assertEqual(url, f"/api/pet/list/{petType}/")
+        self.assertEqual(url, f"/api/pet/list/{pet_type}/")
         logger.debug("Complete Pet List By Type URL Test")
 
     def testPetRUDURL(self):
@@ -32,5 +32,5 @@ class PetUrlTest(TestCase):
 
     def testPetCountURL(self):
         url = reverse('pet-count')
-        self.assertEqual(url, "/api/pet/count/petType/")
+        self.assertEqual(url, "/api/pet/count/pet_type/")
         logger.debug("Complete Pet Count URL Test")

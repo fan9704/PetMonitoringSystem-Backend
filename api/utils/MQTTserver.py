@@ -1,5 +1,4 @@
 import paho.mqtt.client as mqtt
-from PetMonitoringSystemBackend.settings import RABBITMQ_CONFIG
 import logging
 
 logger = logging.getLogger(__name__)
@@ -15,6 +14,7 @@ class MQTTClient:
 
     def on_connect(self, client, userdata, flags, rc):
         logger.info("Connected with result code " + str(rc))
+        logger.info(f'Client {client} User Data {userdata} Flags {flags}')
 
     def on_message(self, client, userdata, msg):
         if msg.topic.split("/")[0] in self.callbacks:
@@ -22,6 +22,7 @@ class MQTTClient:
                 topic=msg.topic,
                 body=msg.payload.decode()
             )
+        logger.info(f'Client {client} User Data {userdata}')
 
     def set_callback(self, topic, callback):
         self.callbacks[topic.split("/")[0]] = callback
@@ -36,34 +37,3 @@ class MQTTClient:
 
     def loop_forever(self):
         self.client.loop_forever()
-
-
-if RABBITMQ_CONFIG["enable"]:
-    mqttClient = MQTTClient(
-        broker_host=RABBITMQ_CONFIG["serverip"],
-        broker_port=int(RABBITMQ_CONFIG["port"]),
-        keepalive=60
-    )
-
-# def on_connect(client, userdata, flags, rc):
-#     print("Connected with result code " + str(rc))
-#     client.subscribe("weightTopic")
-#
-#
-# # The callback for when a PUBLISH message is received from the server.
-# def on_message(client, userdata, msg):
-#     print(msg.topic + " " + str(msg.payload))
-#
-#
-# if RABBITMQ_CONFIG["enable"]:
-#     client = mqtt.Client("PetMonitoringBackend")
-#     client.on_connect = on_connect
-#     client.username_pw_set(
-#         username=RABBITMQ_CONFIG["username"]
-#         , password=RABBITMQ_CONFIG["password"]
-#     )
-#     client.connect(
-#         RABBITMQ_CONFIG["serverip"],
-#         RABBITMQ_CONFIG["port"],
-#         60
-#     )

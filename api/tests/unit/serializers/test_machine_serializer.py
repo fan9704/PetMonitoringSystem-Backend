@@ -7,7 +7,7 @@ from api.serializers import MachineSerializer
 logger = logging.getLogger(__name__)
 
 
-def getMachineValidInputJSON():
+def get_machine_valid_input():
     data = {
         "name": "TestD1",
         "onlineStatus": True,
@@ -31,7 +31,7 @@ def getMachineValidInputJSON():
     return data
 
 
-def getMachineInvalidInputJSON():
+def get_machine_invalid_input():
     data = {
         "onlineStatus": True,
     }
@@ -40,10 +40,10 @@ def getMachineInvalidInputJSON():
 
 class MachineSerializerTestCase(TestCase):
     def test_petType_serializer(self):
-        validData = getMachineValidInputJSON()
+        valid_data = get_machine_valid_input()
 
         # Input JSON Data
-        serializer = MachineSerializer(data=validData)
+        serializer = MachineSerializer(data=valid_data)
         # Authenticate data valid
         serializer.is_valid()
 
@@ -55,8 +55,8 @@ class MachineSerializerTestCase(TestCase):
         logger.debug("Complete Machine Serializer Test")
 
         # # Input Invalid JSON Data
-        invalidData = getMachineInvalidInputJSON()
-        serializer = MachineSerializer(data=invalidData)
+        invalid_data = get_machine_invalid_input()
+        serializer = MachineSerializer(data=invalid_data)
         with self.assertRaises(ValidationError):
             serializer.is_valid(raise_exception=True)
         logger.debug("Complete Machine Invalid Serializer Test")

@@ -28,7 +28,7 @@ urlpatterns = [
     path('pet/list/', PetListView.as_view(), name='pet-list'),
     path('pet/list/<str:pet_type>/', PetQueryListView.as_view(), name='pet-listByType'),
     path('pet/', PetCreateAPIView.as_view(), name="pet-create"),
-    path('pet/count/petType/', PetCountAPIView.as_view(), name="pet-count"),
+    path('pet/count/pet_type/', PetCountAPIView.as_view(), name="pet-count"),
     path('pet/image/<int:pk>/', PetUploadImageAPIView.as_view(), name="pet-upload-image"),
     # Advice Routes
     path('advice/', AdviceAPIView.as_view(), name='advice'),

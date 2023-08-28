@@ -21,13 +21,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+          source .env
+
       - name: Docker Compose Action
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "./docker-compose.yml"
 #      - name: Enable RabbitMQ Plugins
 #        run: |
-#          docker exec -it rabbitmq rabbitmq-plugins enable rabbitmq_mqtt rabbitmq_web_mqtt rabbitmq_web_stomp
+#          docker exec rabbitmq rabbitmq-plugins enable rabbitmq_mqtt rabbitmq_web_mqtt rabbitmq_web_stomp
       - name: Setup Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v2
         with:
@@ -55,17 +60,6 @@ jobs:
         run : |
             pipenv run python manage.py create_test_db
 
-#      - name: Create Elasticsearch Index
-#        run: |
-#            pipenv run python manage.py search_index --create
-
-#      - name: Run Unit Tests
-#        run: |
-#            pipenv run python manage.py test api.tests.unit
-#
-#      - name: Run Integration Tests
-#        run: |
-#            pipenv run python manage.py test api.tests.integration
       - name: Run Tests
         run: |
           coverage run manage.py test

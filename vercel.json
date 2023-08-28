@@ -1,0 +1,16 @@
+{
+    "builds": [{
+        "src": "PetMonitoringSystemBackend/wsgi.py",
+        "use": "@vercel/python",
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "PetMonitoringSystemBackend/asgi:application",
+            "methods": ["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"]
+        }
+    ],
+    "env": {
+        "PIPENV_VENV_IN_PROJECT": "1"
+    }
+}
