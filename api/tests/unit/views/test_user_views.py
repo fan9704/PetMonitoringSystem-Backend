@@ -1,4 +1,5 @@
 import logging
+import random
 from types import SimpleNamespace
 
 from django.contrib.auth.models import User
@@ -22,8 +23,8 @@ class UserAPIViewTestCase(TestCase):
 
     def test_register_new_user(self):
         data = {
-            "username": "Aven",
-            "password": "b10923003",
+            "username": "test_003",
+            "password": str(random.random()),
             "email": "b10923003@gemail.yuntech.edu.tw"
         }
         request = self.factory.post(path='/api/account/register/', data=data, format='json')
@@ -34,14 +35,14 @@ class UserAPIViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['status'], 'success')
         self.assertTrue(response.data['register'])
-        self.assertEqual(response.data['user']['username'], 'Aven')
+        self.assertEqual(response.data['user']['username'], 'test_003')
         logger.info("Complete User Register with non-existing user")
 
     def test_register_existing_user(self):
-        User.objects.create_user(username="existinguser", password='testpassword', email="existinguser@example.com")
+        User.objects.create_user(username="existing_user", password=str(random.random()), email="existinguser@example.com")
         data = {
-            "username": "existinguser",
-            "password": "testpassword",
+            "username": "existing_user",
+            "password": str(random.random()),
             "email": "existinguser@example.com"
         }
         request = self.factory.post(path='/api/account/register/', data=data, format='json')
@@ -55,7 +56,7 @@ class UserAPIViewTestCase(TestCase):
         logger.info("Complete User Register with existing user")
 
     def test_logout(self):
-        User.objects.create_user(username='testuser', password='testpassword')
+        User.objects.create_user(username='test_user', password=str(random.random()))
 
         request = self.factory.get(path='/api/account/logout/')
 
@@ -78,7 +79,7 @@ class UserAPIViewTestCase(TestCase):
         User.objects.create_user(username='test_user', password='test_password')
         data = {
             "username": "test_user",
-            "password": "test_password",
+            "password": str(random.random()),
             "first_name": "test_first_name",
             "last_name": "test_last_name",
             "email": "test@gmail.com"
@@ -97,7 +98,7 @@ class UserAPIViewTestCase(TestCase):
     def test_edit_profile_without_username(self):
         data = {
             "username": "",
-            "password": "test_password",
+            "password": str(random.random()),
             "first_name": "test_first_name",
             "last_name": "test_last_name",
             "email": "test@gmail.com"
@@ -132,7 +133,7 @@ class UserAPIViewTestCase(TestCase):
     def test_oauth_user_register(self):
         data = {
             "username": "test_oauth",
-            "password": "test_oauth",
+            "password": str(random.random()),
             "email": "test_oauth@gemail.yuntech.edu.tw"
         }
         request = self.factory.post(path='/api/account/oauth/register/', data=data, format='json')
@@ -148,7 +149,7 @@ class UserAPIViewTestCase(TestCase):
         logger.info("Complete OAuth User Register")
 
     def test_oauth_user_login(self):
-        User.objects.create_user(username='test_oauth_login', password='test_oauth_login',
+        User.objects.create_user(username='test_oauth_login', password=str(random.random()),
                                  email="test_oauth_login@gemail.yuntech.edu.tw")
         data = {
             "email": "test_oauth_login@gemail.yuntech.edu.tw"
