@@ -14,25 +14,25 @@ class RecordModelTest(TestCase):
         RecordType.objects.create(type="food")
 
     def testRecordTypeDescription(self):
-        weightRecordType = RecordType.objects.get(type="weight")
-        waterRecordType = RecordType.objects.get(type="water")
-        humidityRecordType = RecordType.objects.get(type="humidity")
-        temperatureRecordType = RecordType.objects.get(type="temperature")
-        foodRecordType = RecordType.objects.get(type="food")
+        weight_record_type = RecordType.objects.get(type="weight")
+        water_record_type = RecordType.objects.get(type="water")
+        humidity_record_type = RecordType.objects.get(type="humidity")
+        temperature_record_type= RecordType.objects.get(type="temperature")
+        food_record_type = RecordType.objects.get(type="food")
 
         # ID
-        self.assertEqual(weightRecordType.id, 1)
-        self.assertEqual(waterRecordType.id, 2)
-        self.assertEqual(humidityRecordType.id, 3)
-        self.assertEqual(temperatureRecordType.id, 4)
-        self.assertEqual(foodRecordType.id, 5)
+        self.assertEqual(weight_record_type.id, 1)
+        self.assertEqual(water_record_type.id, 2)
+        self.assertEqual(humidity_record_type.id, 3)
+        self.assertEqual(temperature_record_type.id, 4)
+        self.assertEqual(food_record_type.id, 5)
         logger.debug("Complete RecordType ID Model Test")
         # Description
-        self.assertEqual(weightRecordType.type, "weight")
-        self.assertEqual(waterRecordType.type, "water")
-        self.assertEqual(humidityRecordType.type, "humidity")
-        self.assertEqual(temperatureRecordType.type, "temperature")
-        self.assertEqual(foodRecordType.type, "food")
+        self.assertEqual(weight_record_type.type, "weight")
+        self.assertEqual(water_record_type.type, "water")
+        self.assertEqual(humidity_record_type.type, "humidity")
+        self.assertEqual(temperature_record_type.type, "temperature")
+        self.assertEqual(food_record_type.type, "food")
         logger.debug("Complete RecordType Description Model Test")
 
     def tearDown(self):

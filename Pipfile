@@ -36,6 +36,7 @@ pillow = "==8.4.0"
 django-seed = "*"
 python-dotenv = "*"
 graphene-django = "*"
+python-json-logger = "*"
 
 [dev-packages]
 

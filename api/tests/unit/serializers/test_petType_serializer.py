@@ -7,28 +7,28 @@ from api.serializers import PetTypeSerializer
 logger = logging.getLogger(__name__)
 
 
-def getPetTypeValidInputJSON():
-    petType = {
+def get_pet_type_valid_input():
+    pet_type = {
         "typename": "cat",
         "description": "meow"
     }
-    return petType
+    return pet_type
 
 
-def getPetTypeInvalidInputJSON():
-    petType = {
+def get_pet_type_invalid_input():
+    pet_type = {
         "typename": "",
         "description": "meow"
     }
-    return petType
+    return pet_type
 
 
 class PetTypeSerializerTestCase(TestCase):
     def test_petType_serializer(self):
-        validPetType = getPetTypeValidInputJSON()
+        valid_pet_type = get_pet_type_valid_input()
 
         # Input JSON Data
-        serializer = PetTypeSerializer(data=validPetType)
+        serializer = PetTypeSerializer(data=valid_pet_type)
         # Authenticate data valid
         serializer.is_valid()
 

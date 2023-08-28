@@ -7,55 +7,56 @@ from api.models import Pet, PetType, Record, RecordType
 
 logger = logging.getLogger(__name__)
 
+
 class RecordModelTest(TestCase):
     def setUp(self):
         # PetType Fake Stub
-        catType = PetType.objects.create(typename="cat", description="貓咪")
-        dogType = PetType.objects.create(typename="dog", description="狗")
+        cat_type = PetType.objects.create(typename="cat", description="貓咪")
+        dog_type = PetType.objects.create(typename="dog", description="狗")
         # User Fake Stub
         u1 = User.objects.create(username="u1", email="u1@gmail.com")
         u2 = User.objects.create(username="u2", email="u2@gmail.com")
         # Record Type Fake Stub
-        weightRecordType = RecordType.objects.create(type="weight")
-        waterRecordType = RecordType.objects.create(type="water")
-        humidityRecordType = RecordType.objects.create(type="humidity")
-        temperatureRecordType = RecordType.objects.create(type="temperature")
-        foodRecordType = RecordType.objects.create(type="food")
+        weight_record_type = RecordType.objects.create(type="weight")
+        water_record_type = RecordType.objects.create(type="water")
+        humidity_record_type = RecordType.objects.create(type="humidity")
+        temperature_record_type = RecordType.objects.create(type="temperature")
+        food_record_type = RecordType.objects.create(type="food")
         # Pet Fake Stub
-        cat1 = Pet.objects.create(name="cat1", keeper=u1, type=catType, birthday=datetime.date.today(), content="cat1")
-        cat2 = Pet.objects.create(name="cat2", keeper=u2, type=catType, birthday=datetime.date.today(), content="cat2")
-        dog1 = Pet.objects.create(name="dog1", keeper=u1, type=dogType, birthday=datetime.date.today(), content="dog1")
-        dog2 = Pet.objects.create(name="dog2", keeper=u2, type=dogType, birthday=datetime.date.today(), content="dog2")
+        cat1 = Pet.objects.create(name="cat1", keeper=u1, type=cat_type, birthday=datetime.date.today(), content="cat1")
+        cat2 = Pet.objects.create(name="cat2", keeper=u2, type=cat_type, birthday=datetime.date.today(), content="cat2")
+        dog1 = Pet.objects.create(name="dog1", keeper=u1, type=dog_type, birthday=datetime.date.today(), content="dog1")
+        dog2 = Pet.objects.create(name="dog2", keeper=u2, type=dog_type, birthday=datetime.date.today(), content="dog2")
         # Data Dummy Stub
-        weightData = 0.6
-        waterData = 0.7
-        humidityData = 0.8
-        temperatureData = 0.9
-        foodData = 1.0
+        weight_data = 0.6
+        water_data = 0.7
+        humidity_data = 0.8
+        temperature_data = 0.9
+        food_data = 1.0
         Record.objects.create(
             pet=cat1,
-            type=weightRecordType,
-            data=weightData
+            type=weight_record_type,
+            data=weight_data
         )
         Record.objects.create(
             pet=cat2,
-            type=waterRecordType,
-            data=waterData
+            type=water_record_type,
+            data=water_data
         )
         Record.objects.create(
             pet=dog1,
-            type=humidityRecordType,
-            data=humidityData
+            type=humidity_record_type,
+            data=humidity_data
         )
         Record.objects.create(
             pet=dog2,
-            type=temperatureRecordType,
-            data=temperatureData
+            type=temperature_record_type,
+            data=temperature_data
         )
         Record.objects.create(
             pet=dog2,
-            type=foodRecordType,
-            data=foodData
+            type=food_record_type,
+            data=food_data
         )
 
     def testRecordFields(self):
@@ -64,50 +65,53 @@ class RecordModelTest(TestCase):
         dog1 = Pet.objects.get(name="dog1")
         dog2 = Pet.objects.get(name="dog2")
 
-        u1 = User.objects.get(username="u1", email="u1@gmail.com")
-        u2 = User.objects.get(username="u2", email="u2@gmail.com")
+        weight_record_type = RecordType.objects.get(type="weight")
+        water_record_type = RecordType.objects.get(type="water")
+        humidity_record_type = RecordType.objects.get(type="humidity")
+        temperature_record_type = RecordType.objects.get(type="temperature")
+        food_record_type = RecordType.objects.get(type="food")
 
-        weightRecordType = RecordType.objects.get(type="weight")
-        waterRecordType = RecordType.objects.get(type="water")
-        humidityRecordType = RecordType.objects.get(type="humidity")
-        temperatureRecordType = RecordType.objects.get(type="temperature")
-        foodRecordType = RecordType.objects.get(type="food")
+        weight_data = 0.6
+        water_data = 0.7
+        humidity_data = 0.8
+        temperature_data = 0.9
+        food_data = 1.0
 
-        weightData = 0.6
-        waterData = 0.7
-        humidityData = 0.8
-        temperatureData = 0.9
-        foodData = 1.0
-
-        weightRecord = Record.objects.get(
+        weight_record = Record.objects.get(
             pet=cat1,
-            type=weightRecordType,
-            data=weightData
+            type=weight_record_type,
+            data=weight_data
         )
-        waterRecord = Record.objects.get(
+        water_record = Record.objects.get(
             pet=cat2,
-            type=waterRecordType,
-            data=waterData
+            type=water_record_type,
+            data=water_data
         )
-        humidityRecord = Record.objects.get(
+        humidity_record = Record.objects.get(
             pet=dog1,
-            type=humidityRecordType,
-            data=humidityData
+            type=humidity_record_type,
+            data=humidity_data
         )
-        temperateRecord = Record.objects.get(
+        temperate_record = Record.objects.get(
             pet=dog2,
-            type=temperatureRecordType,
-            data=temperatureData
+            type=temperature_record_type,
+            data=temperature_data
         )
-        foodRecord = Record.objects.get(
+        food_record = Record.objects.get(
             pet=dog2,
-            type=foodRecordType,
-            data=foodData
+            type=food_record_type,
+            data=food_data
         )
 
         # Name
         self.assertEqual(cat1.name, "cat1")
         self.assertEqual(dog1.name, "dog1")
+        # Record
+        self.assertEqual(weight_record.data, weight_data)
+        self.assertEqual(water_record.data, water_data)
+        self.assertEqual(humidity_record.data, humidity_data)
+        self.assertEqual(temperate_record.data, temperature_data)
+        self.assertEqual(food_record.data, food_data)
         logger.debug("Complete Pet Name Model Test")
 
     def tearDown(self):

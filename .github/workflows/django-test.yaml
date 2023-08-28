@@ -32,7 +32,7 @@ jobs:
           compose-file: "./docker-compose.yml"
 #      - name: Enable RabbitMQ Plugins
 #        run: |
-#          docker exec -it rabbitmq rabbitmq-plugins enable rabbitmq_mqtt rabbitmq_web_mqtt rabbitmq_web_stomp
+#          docker exec rabbitmq rabbitmq-plugins enable rabbitmq_mqtt rabbitmq_web_mqtt rabbitmq_web_stomp
       - name: Setup Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v2
         with:
