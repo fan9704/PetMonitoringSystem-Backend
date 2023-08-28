@@ -28,7 +28,7 @@ from rest_framework_simplejwt.views import (
 from rest_framework_simplejwt.views import TokenVerifyView
 from django.conf import settings
 from django.conf.urls.static import static
-# from graphene_django.views import GraphQLView
+from graphene_django.views import GraphQLView
 
 def return_static(request, path, insecure=True, **kwargs):
     return serve(request, path, insecure=True, **kwargs)
@@ -53,14 +53,13 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
-    # path('(?P<format>\.json|\.yaml)', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path('health/', include('health_check.urls')),
     re_path(r'^static/(?P<path>.*)$', return_static, name='static'),
 
-    # path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
     # path('forest/', include('django_forest.urls')),
     # path('metrics/', include(prometheus_urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
