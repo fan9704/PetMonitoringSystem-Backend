@@ -8,24 +8,23 @@ logger = logging.getLogger(__name__)
 
 class PetModelTest(TestCase):
     def setUp(self):
-        PetType.objects.create(typename="cat", description="貓咪")
-        PetType.objects.create(typename="dog", description="狗")
+        self.cat_type = PetType.objects.create(typename="cat", description="貓咪")
+        self.dog_type = PetType.objects.create(typename="dog", description="狗")
 
     def testPetTypeName(self):
-        cat_type = PetType.objects.get(typename="cat")
-        dog_type = PetType.objects.get(typename="dog")
-
-        self.assertEqual(cat_type.typename, "cat")
-        self.assertEqual(dog_type.typename, "dog")
+        self.assertEqual(self.cat_type.typename, "cat")
+        self.assertEqual(self.dog_type.typename, "dog")
         print("Complete Test PetType Typename")
 
     def testPetTypeDescription(self):
-        cat_type = PetType.objects.get(typename="cat")
-        dog_type = PetType.objects.get(typename="dog")
-
-        self.assertEqual(cat_type.description, "貓咪")
-        self.assertEqual(dog_type.description, "狗")
+        self.assertEqual(self.cat_type.description, "貓咪")
+        self.assertEqual(self.dog_type.description, "狗")
         print("Complete Test PetType Description")
+
+    def testPetTypeToString(self):
+        self.assertEqual(str(self.cat_type), "寵物種類cat")
+        self.assertEqual(str(self.dog_type), "寵物種類dog")
+        print("Complete Test PetType To String")
 
     def tearDown(self):
         PetType.objects.all().delete()
