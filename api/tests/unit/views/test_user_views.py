@@ -146,7 +146,7 @@ class UserAPIViewTestCase(TestCase):
         self.assertEqual(response.data['status'], 'success')
         self.assertTrue(response.data['register'])
         self.assertEqual(response.data['Identity'], "OAuth User")
-        self.assertEqual(response.data['user']['username'], "test_oauth")
+        self.assertEqual(response.data['user']['username'], "test_oauth_register")
         logger.info("Complete OAuth User Register")
 
     def test_oauth_existing_user_register(self):
