@@ -78,53 +78,8 @@ class PetCountAPIView(APIView):
     def get(self, request: Request, *args, **kwargs):
         pet_dict = dict()
         for i in models.PetType.objects.all():
-            petDict[i.typename] = models.Pet.objects.filter(type=i.id).count()
-        return Response(data=petDict, status=status.HTTP_200_OK)
-
-
-def petResponseConverter(pet: models.Pet):
-    if pet is not None:
-        result = dict(
-            id=pet.id,
-            name=pet.name,
-            keeper=userResponseConverter(pet.keeper),
-            type_id=petTypeResponseConverter(pet.type),
-            birthday=pet.birthday,
-            content=pet.content
-        )
-    else:
-        result = ""
-    return result
-
-
-def petTypeResponseConverter(petType: models.PetType):
-    if petType is not None:
-        result = dict(
-            id=petType.id,
-            typename=petType.typename,
-            description=petType.description
-        )
-    else:
-        result = ""
-    return result
-
-
-def calculate_resting_energy_requirement(weight):
-    return 70 * (weight ** 0.75)
-
-
-def calculate_daily_energy_requirement(weight, activity_level):
-    activity_levels = {
-        'low': 1.2,
-        'moderate': 1.4,
-        'high': 1.6,
-    }
-
-    if activity_level not in activity_levels:
-        raise ValueError("Invalid activity level")
-
-    levels = activity_levels[activity_level]
-    return levels * calculate_resting_energy_requirement(weight)
+            pet_dict[i.typename] = models.Pet.objects.filter(type=i.id).count()
+        return Response(data=pet_dict, status=status.HTTP_200_OK)
 
 
 class PetUploadImageAPIView(APIView):
@@ -152,4 +107,18 @@ class PetUploadImageAPIView(APIView):
             return Response(data={'error': 'Pet not found'}, status=status.HTTP_404_NOT_FOUND)
         pet.image = request.FILES.get("image")
         pet.save()
-        return Response(data=PetSerializer(pet).data, status=status.HTTP_200_OK
+        return Response(data=PetSerializer(pet).data, status=status.HTTP_200_OK)
+
+
+def calculate_daily_energy_requirement(weight, activity_level):
+    activity_levels = {
+        'low': 1.2,
+        'moderate': 1.4,
+        'high': 1.6,
+    }
+
+    if activity_level not in activity_levels:
+        raise ValueError("Invalid activity level")
+
+    levels = activity_levels[activity_level]
+    return levels * 70 * (weight ** 0.75)

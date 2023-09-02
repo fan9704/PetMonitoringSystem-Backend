@@ -23,8 +23,35 @@ class PetRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pet
-        fields = ['id', 'name', 'keeper', 'type', 'birthday', 'content', 'image', 'size', 'weight', 'gender', 'is_neutered']
-        read_only_fields = ('id',)
+        fields = ['id', 'name', 'keeper', 'type', 'birthday', 'content', 'image', 'weight', 'gender',
+                  'is_neutered', 'activity_level', 'der']
+        read_only_fields = ('id', 'der')
+
+    def calculate_resting_energy_requirement(self, weight):
+        return 70 * (weight ** 0.75)
+
+    def calculate_daily_energy_requirement(self, weight, activity_level):
+        activity_levels = {
+            'low': 1.2,
+            'moderate': 1.4,
+            'high': 1.6,
+        }
+
+        if activity_level not in activity_levels:
+            raise serializers.ValidationError("Invalid activity level")
+
+        levels = activity_levels[activity_level]
+        return levels * self.calculate_resting_energy_requirement(float(weight))
+
+    def create(self, validated_data):
+        weight = validated_data.get('weight', 0)
+        activity_level = validated_data.get('activity_level')
+
+        if activity_level:
+            der = self.calculate_daily_energy_requirement(weight, activity_level)
+            validated_data['der'] = der
+
+        return super().create(validated_data)
 
 
 class PetSerializer(serializers.ModelSerializer):
@@ -34,7 +61,8 @@ class PetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pet
-        fields = ['id', 'name', 'keeper', 'type', 'birthday', 'content', 'image', 'size', 'weight', 'gender', 'is_neutered']
+        fields = ['id', 'name', 'keeper', 'type', 'birthday', 'content', 'image', 'weight', 'gender',
+                  'is_neutered', 'activity_level', ]
         read_only_fields = ('id',)
         depth = 1
 
@@ -45,10 +73,11 @@ class PetUploadImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
         fields = ['id', 'image']
-        read_only_fields = ('id', 'name', 'keeper', 'type', 'birthday', 'content', 'size', 'weight', 'gender', 'is_neutered')
+        read_only_fields = ('id', 'name', 'keeper', 'type', 'birthday', 'content', 'weight', 'gender',
+                            'is_neutered', 'activity_level', 'der',)
         depth = 1
 
-        
+
 class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Machine

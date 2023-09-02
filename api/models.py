@@ -29,12 +29,14 @@ class Pet(models.Model):
     type = models.ForeignKey(to=PetType, on_delete=models.CASCADE, verbose_name="寵物種類")
     birthday = models.DateField(verbose_name="寵物生日", blank=True, null=True, default=datetime.date.today)
     content = models.TextField(verbose_name="寵物敘述")
-    size = models.CharField(max_length=256, verbose_name="寵物大小")  # 新增寵物大小欄位
     weight = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="寵物重量")  # 新增寵物重量欄位
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='unknown', verbose_name="性別")  # 新增性別欄位
     is_neutered = models.BooleanField(default=False, verbose_name="是否結紮")   # 新增結紮欄位
+    activity_level = models.CharField(max_length=10,
+                                      choices=[('low', 'Low'), ('moderate', 'Moderate'), ('high', 'High')])
     der = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="每日能量需求")    # der欄位
     image = models.ImageField(upload_to=upload_to, blank=True, null=True)
+
 
     # External Columns
     # chip_id = models.CharField(max_length=256,verbose_name="晶片編號")
