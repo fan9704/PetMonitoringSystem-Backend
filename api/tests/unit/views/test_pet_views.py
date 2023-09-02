@@ -31,10 +31,14 @@ class PetAPIViewTestCase(TestCase):
         User.objects.all().delete()
 
     def test_list_pet(self):
-        Pet.objects.create(name="cat1", keeper=self.u1, type=self.cat_type, birthday=datetime.date.today(), content="cat1")
-        Pet.objects.create(name="cat2", keeper=self.u2, type=self.cat_type, birthday=datetime.date.today(), content="cat2")
-        Pet.objects.create(name="dog1", keeper=self.u1, type=self.dog_type, birthday=datetime.date.today(), content="dog1")
-        Pet.objects.create(name="dog2", keeper=self.u2, type=self.dog_type, birthday=datetime.date.today(), content="dog2")
+        Pet.objects.create(name="cat1", keeper=self.u1, type=self.cat_type, birthday=datetime.date.today(),
+                           content="cat1")
+        Pet.objects.create(name="cat2", keeper=self.u2, type=self.cat_type, birthday=datetime.date.today(),
+                           content="cat2")
+        Pet.objects.create(name="dog1", keeper=self.u1, type=self.dog_type, birthday=datetime.date.today(),
+                           content="dog1")
+        Pet.objects.create(name="dog2", keeper=self.u2, type=self.dog_type, birthday=datetime.date.today(),
+                           content="dog2")
 
         request = self.factory.get(path='/api/pet/list/')
 
@@ -46,6 +50,19 @@ class PetAPIViewTestCase(TestCase):
 
         logger.info("Complete test list pet")
 
+    def test_list_pet_by_pet_type(self):
+        Pet.objects.create(name="cat12", keeper=self.u1, type=self.cat_type, birthday=datetime.date.today(),
+                           content="cat12")
+        target_pet_type = "cat'"
+        request = self.factory.get(path=f'/api/pet/list/{target_pet_type}')
+
+        view = PetQueryListView.as_view()
+        response = view(request, pet_type=target_pet_type)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        logger.info("Complete test list pet by pet type")
+
     def test_create_pet_valid(self):
         data = {
             "name": "cat3",
@@ -54,7 +71,7 @@ class PetAPIViewTestCase(TestCase):
             "content": "test for create pet"
         }
 
-        request = self.factory.post(path="/api/pet/", data=data,format='multipart')
+        request = self.factory.post(path="/api/pet/", data=data, format='multipart')
 
         view = PetCreateAPIView.as_view()
         response = view(request)
@@ -83,7 +100,8 @@ class PetAPIViewTestCase(TestCase):
         self.assertEqual(len(response.data.keys()), 4)
 
     def test_upload_pet_image(self):
-        pet = Pet.objects.create(name="cat1", keeper=self.u1, type=self.cat_type, birthday=datetime.date.today(), content="cat1")
+        pet = Pet.objects.create(name="cat1", keeper=self.u1, type=self.cat_type, birthday=datetime.date.today(),
+                                 content="cat1")
         image = Image.new('RGB', (100, 100))
         image_io = BytesIO()
         image.save(image_io, 'JPEG')
