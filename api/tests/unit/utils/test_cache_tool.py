@@ -15,5 +15,5 @@ class TestCacheOperations(TestCase):
         self.assertEqual(cached_value, b'value')
 
     def test_cache_nonexistent_key(self):
-        cached_value = self.cache.getCache('nonExistentKey')
+        cached_value = self.cache.get_cache('nonExistentKey')
         self.assertIsNone(cached_value)
