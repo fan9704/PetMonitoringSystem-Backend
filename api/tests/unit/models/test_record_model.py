@@ -81,7 +81,7 @@ class RecordModelTest(TestCase):
         self.assertEqual(str(self.weight_record), "數據0.6")
         self.assertEqual(str(self.water_record), "數據0.7")
         self.assertEqual(str(self.humidity_record), "數據0.8")
-        self.assertEqual(str(self.temperate_record), "數據0.9")
+        self.assertEqual(str(self.temperature_record), "數據0.9")
         self.assertEqual(str(self.food_record), "數據1.0")
 
     def tearDown(self):

@@ -5,12 +5,12 @@ import logging
 
 from api.documents import UserES, PetES
 
+logger = logging.getLogger(__name__)
 
-logger =logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Refresh data in Elasticsearch'
-    es_enabled = os.getenv("ELASTICSEARCH_ENABLE",False)
+    es_enabled = os.getenv("ELASTICSEARCH_ENABLE", False)
 
     def handle(self, *args, **kwargs):
         if self.es_enabled:

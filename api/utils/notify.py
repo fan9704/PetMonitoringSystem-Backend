@@ -67,7 +67,3 @@ def http_notify(title: str, body: str):
     response = requests.post('https://fcm.googleapis.com/v1/projects/petmonitoringsystem-729da/messages:send',
                              data=json.dumps(message), headers=headers)
     print(response.text)
-
-
-if '__main__' == __name__:
-    notify("TEST", "Python SDK", 1)
