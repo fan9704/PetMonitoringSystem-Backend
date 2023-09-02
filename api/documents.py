@@ -75,6 +75,11 @@ class PetES(Document):
             'name',
             'birthday',
             'content',
+            'weight',
+            'gender',
+            'is_neutered',
+            'activity_level',
+            'der'
         ]
 
 

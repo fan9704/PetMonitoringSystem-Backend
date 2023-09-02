@@ -108,3 +108,17 @@ class PetUploadImageAPIView(APIView):
         pet.image = request.FILES.get("image")
         pet.save()
         return Response(data=PetSerializer(pet).data, status=status.HTTP_200_OK)
+
+
+def calculate_daily_energy_requirement(weight, activity_level):
+    activity_levels = {
+        'low': 1.2,
+        'moderate': 1.4,
+        'high': 1.6,
+    }
+
+    if activity_level not in activity_levels:
+        raise ValueError("Invalid activity level")
+
+    levels = activity_levels[activity_level]
+    return levels * 70 * (weight ** 0.75)
