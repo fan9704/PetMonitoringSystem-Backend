@@ -2,7 +2,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, generics, viewsets
 from rest_framework.response import Response
 
-from api.models import Record, RecordType
+from api.models import Record, RecordType, Pet
 from api.serializers import RecordSerializer, RecordTypeSerializer, RecordRequestSerializer
 
 
@@ -30,7 +30,7 @@ class RecordByRecordType(viewsets.ViewSet):
             records = Record.objects.filter(type=record_type)
             serializer = RecordSerializer(records, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except record_type.DoesNotExist:
+        except RecordType.DoesNotExist:
             msg = {
                 "message": "Not found Record Type"
             }
@@ -47,11 +47,15 @@ class RecordByRecordType(viewsets.ViewSet):
             records = Record.objects.select_related('pet', 'type').filter(pet__name=pet_name, type__type=record_type)
             serializer = RecordSerializer(records, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as E:
+        except RecordType.DoesNotExist:
             msg = {
                 "message": "Not found Record Type"
             }
-            print(E)
+            return Response(msg, status.HTTP_404_NOT_FOUND)
+        except Pet.DoesNotExist:
+            msg = {
+                "message": "Not found Pet"
+            }
             return Response(msg, status.HTTP_404_NOT_FOUND)
 
 

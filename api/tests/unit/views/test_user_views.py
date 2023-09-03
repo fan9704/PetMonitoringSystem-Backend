@@ -1,15 +1,15 @@
 import logging
-import random
+import secrets
 from types import SimpleNamespace
 
 from django.contrib.auth.models import User
-from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIRequestFactory
 
 from api.views.userViews import Register, LogoutAPI, EditProfileAPI, UserAPIView, OAuthUserRegisterAPI, \
     OAuthUserLoginAPI
+from django.contrib.sessions.middleware import SessionMiddleware
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class UserAPIViewTestCase(TestCase):
     def test_register_new_user(self):
         data = {
             "username": "test_003",
-            "password": str(random.random()),
+            "password": str(secrets.randbits(8)),
             "email": "b10923003@gemail.yuntech.edu.tw"
         }
         request = self.factory.post(path='/api/account/register/', data=data, format='json')
@@ -39,10 +39,11 @@ class UserAPIViewTestCase(TestCase):
         logger.info("Complete User Register with non-existing user")
 
     def test_register_existing_user(self):
-        User.objects.create_user(username="existing_user", password=str(random.random()), email="existinguser@example.com")
+        User.objects.create_user(username="existing_user", password=str(secrets.randbits(8)),
+                                 email="existinguser@example.com")
         data = {
             "username": "existing_user",
-            "password": str(random.random()),
+            "password": str(secrets.randbits(8)),
             "email": "existinguser@example.com"
         }
         request = self.factory.post(path='/api/account/register/', data=data, format='json')
@@ -56,7 +57,7 @@ class UserAPIViewTestCase(TestCase):
         logger.info("Complete User Register with existing user")
 
     def test_logout(self):
-        User.objects.create_user(username='test_user', password=str(random.random()))
+        User.objects.create_user(username='test_user', password=str(secrets.randbits(8)))
 
         request = self.factory.get(path='/api/account/logout/')
 
@@ -79,7 +80,7 @@ class UserAPIViewTestCase(TestCase):
         User.objects.create_user(username='test_user', password='test_password')
         data = {
             "username": "test_user",
-            "password": str(random.random()),
+            "password": str(secrets.randbits(8)),
             "first_name": "test_first_name",
             "last_name": "test_last_name",
             "email": "test@gmail.com"
@@ -98,7 +99,7 @@ class UserAPIViewTestCase(TestCase):
     def test_edit_profile_without_username(self):
         data = {
             "username": "",
-            "password": str(random.random()),
+            "password": str(secrets.randbits(8)),
             "first_name": "test_first_name",
             "last_name": "test_last_name",
             "email": "test@gmail.com"
@@ -131,12 +132,12 @@ class UserAPIViewTestCase(TestCase):
         logger.info("Complete test list user")
 
     def test_oauth_user_register(self):
-        data = {
-            "username": "test_oauth",
-            "password": str(random.random()),
-            "email": "test_oauth@gemail.yuntech.edu.tw"
+        data_oauth = {
+            "username": "test_oauth_register",
+            "password": str(secrets.randbits(8)),
+            "email": "test_oauth_register@gemail.yuntech.edu.tw"
         }
-        request = self.factory.post(path='/api/account/oauth/register/', data=data, format='json')
+        request = self.factory.post(path='/api/account/oauth/register/', data=data_oauth, format='json')
 
         view = OAuthUserRegisterAPI.as_view()
         response = view(request)
@@ -145,11 +146,29 @@ class UserAPIViewTestCase(TestCase):
         self.assertEqual(response.data['status'], 'success')
         self.assertTrue(response.data['register'])
         self.assertEqual(response.data['Identity'], "OAuth User")
-        self.assertEqual(response.data['user']['username'], "test_oauth")
+        self.assertEqual(response.data['user']['username'], "test_oauth_register")
         logger.info("Complete OAuth User Register")
 
+    def test_oauth_existing_user_register(self):
+        User.objects.create_user(username="test_oauth", password=str(secrets.randbits(8)),
+                                 email="test_oauth@gemail.yuntech.edu.tw")
+        data = {
+            "username": "test_oauth",
+            "password": str(secrets.randbits(8)),
+            "email": "test_oauth@gemail.yuntech.edu.tw"
+        }
+        request = self.factory.post(path='/api/account/oauth/register/', data=data, format='json')
+
+        view = OAuthUserRegisterAPI.as_view()
+        response = view(request)
+
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.data['status'], 'failed')
+        self.assertEqual(response.data['message'], "Duplicate Username or Email")
+        logger.info("Complete OAuth Existing User Register")
+
     def test_oauth_user_login(self):
-        User.objects.create_user(username='test_oauth_login', password=str(random.random()),
+        User.objects.create_user(username='test_oauth_login', password=str(secrets.randbits(8)),
                                  email="test_oauth_login@gemail.yuntech.edu.tw")
         data = {
             "email": "test_oauth_login@gemail.yuntech.edu.tw"

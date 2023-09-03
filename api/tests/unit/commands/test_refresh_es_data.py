@@ -9,8 +9,9 @@ from dotenv import load_dotenv, find_dotenv
 logger = logging.getLogger(__name__)
 load_dotenv(find_dotenv())
 
+
 class RefreshESDataTestCase(unittest.TestCase):
-    es_enabled = os.getenv("ELASTICSEARCH_ENABLE",False)
+    es_enabled = os.getenv("ELASTICSEARCH_ENABLE", False)
     CLOSED_STATEMENT = "Elasticsearch in Closed Statement"
 
     def setUp(self) -> None:
@@ -27,12 +28,14 @@ class RefreshESDataTestCase(unittest.TestCase):
             self.pet_index.create()
         else:
             logger.info(self.CLOSED_STATEMENT)
+
     def tearDown(self) -> None:
         if self.es_enabled:
             self.user_index.delete()
             self.pet_index.delete()
         else:
             logger.info(self.CLOSED_STATEMENT)
+
     def test_refresh_es(self):
         if self.es_enabled:
             call_command('refresh_es')

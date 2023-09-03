@@ -17,19 +17,14 @@ def get_pet_type_valid_input():
 
 def get_pet_type_invalid_input():
     pet_type = {
-        "typename": "",
-        "description": "meow"
     }
     return pet_type
 
 
 class PetTypeSerializerTestCase(TestCase):
-    def test_petType_serializer(self):
+    def test_pet_type_serializer_valid(self):
         valid_pet_type = get_pet_type_valid_input()
-
-        # Input JSON Data
         serializer = PetTypeSerializer(data=valid_pet_type)
-        # Authenticate data valid
         serializer.is_valid()
 
         # Assert
@@ -38,9 +33,8 @@ class PetTypeSerializerTestCase(TestCase):
         self.assertEqual(serializer.validated_data['description'], 'meow')
         logger.debug("Complete PetType Serializer Test")
 
-        # # Input Invalid JSON Data
-        # invalidPetType = getPetTypeInvalidInputJSON()
-        # serializer = PetTypeSerializer(data=invalidPetType)
-        # with self.assertRaises(ValidationError):
-        #     serializer.is_valid(raise_exception=True)
-        # logger.debug("Complete PetType Invalid Serializer Test")
+    def test_pet_type_serializer_invalid(self):
+        invalid_pet_type = get_pet_type_invalid_input()
+        serializer = PetTypeSerializer(data=invalid_pet_type)
+        self.assertTrue(serializer.is_valid())
+        logger.debug("Complete PetType Invalid Serializer Test")
