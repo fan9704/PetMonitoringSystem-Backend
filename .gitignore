@@ -1,5 +1,5 @@
 .idea/**
-.env.example
+.env
 /Lib
 /Scripts
 /Include
