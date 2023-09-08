@@ -108,3 +108,5 @@ class PetUploadImageAPIView(APIView):
         pet.image = request.FILES.get("image")
         pet.save()
         return Response(data=PetSerializer(pet).data, status=status.HTTP_200_OK)
+
+
