@@ -19,6 +19,12 @@ def temperatureAndHumidityCallBack(topic: str, body: str, ch=None, method=None, 
     logger.info("[Humidity] Received " + str(data["Humidity"]))
     # ch.basic_ack(delivery_tag=method.delivery_tag)
     # machine = models.Machine.objects.get(name=data["machineId"])
+
+    # Check for abnormal temperature
+    temperature = float(data["Temperature"])
+    if temperature > 27 or temperature < 20:
+        raise Exception("溫度異常")
+
     try:
         machine = models.Machine.objects.get(name=topic.split("/")[1])
     except models.Machine.DoesNotExist:
@@ -44,10 +50,19 @@ def temperatureAndHumidityCallBack(topic: str, body: str, ch=None, method=None, 
 def weightCallBack(topic: str, body: str, ch=None, method=None, properties=None):
     data = json.loads(body)
     logger.info("[Weight] Received " + str(data["Weight"]))
+
+    weight = float(data["Weight"])
+    if weight < 0:
+        raise Exception("進食問題")
+
     # ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 def waterCallBack(topic: str, body: str, ch=None, method=None, properties=None):
     data = json.loads(body)
     logger.info("[Water] Received " + str(data["Water"]))
+
+    water = float(data["Water"])
+    if water < 0:
+        raise Exception("攝取水量問題")
     # ch.basic_ack(delivery_tag=method.delivery_tag)
