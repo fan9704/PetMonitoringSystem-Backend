@@ -23,7 +23,7 @@ jobs:
 
       - name: Create env file
         run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+          echo "${{ env.ENV_FILE }}" > .env
           source .env
 
       - name: Docker Compose Action
@@ -68,8 +68,8 @@ jobs:
       - name: Sonarqube Scanning
         uses: sonarsource/sonarqube-scan-action@master
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
           EXTRA_ARGS: -Dsonar.coverageReportPaths=coverage.xml
 #      - name: DockerHub Login
 #        uses: docker/login-action@v2.1.0
