@@ -27,24 +27,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', '123456')
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = ["127.0.0.1", "*", '.vercel.app']
+ALLOWED_HOSTS = ["127.0.0.1", "140.125.207.230", '.vercel.app']
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
+    "http://140.125.207.230:3000",
 ]
 CORS_ALLOWED_HEADERS = "*"
 CORS_ORIGIN_ALLOW_METHODS = "*"
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8000",
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "http://140.125.207.230:8000",
 ]
 
 # Application definition

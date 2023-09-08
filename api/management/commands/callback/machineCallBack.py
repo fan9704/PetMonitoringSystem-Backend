@@ -1,11 +1,14 @@
 import json
 
 from api.models import Machine
+from api.management.commands.logger.commandLogger import CommandLogger
+
+logger = CommandLogger(__name__).get_logger()
 
 
-def machineCallBack(topic: str, body: str, ch=None, method=None, properties=None):
-    print("[Machine] Received ", body)
-    # ch.basic_ack(delivery_tag=method.delivery_tag)
+def machine_callback(topic: str, body: str, ch=None, method=None, properties=None):
+    logger.debug(f"Topic:{topic} CH:{ch} Method:{method} Properties:{properties}")
+
     content = json.loads(body)
     try:
         machine = Machine.objects.get(
