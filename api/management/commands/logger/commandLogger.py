@@ -12,8 +12,8 @@ class CommandLogger:
         self.logger = logging.getLogger(name)
         self.logger.addHandler(self.stderr_logger)
 
-    def getLogger(self):
+    def get_logger(self):
         return self.logger
 
-    def setLevel(self, logType):
-        self.logger.setLevel(logType)
+    def set_level(self, log_type):
+        self.logger.setLevel(log_type)
