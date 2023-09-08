@@ -10,15 +10,15 @@ def upload_to(instance, filename):
 
 
 class PetType(models.Model):
-    typename = models.CharField(max_length=25, null=True, blank=True, verbose_name="寵物種類")
-    description = models.TextField(null=True, blank=True, verbose_name="寵物種類描述")
+    typename = models.CharField(max_length=25, default="", verbose_name="寵物種類")
+    description = models.TextField(default="", verbose_name="寵物種類描述")
 
     def __str__(self):
         return f'寵物種類{self.typename}'
 
 
 class Pet(models.Model):
-    ACTIVITY_LEVEL = [
+    activity_level_option = [
         ('low', 'Low'),
         ('moderate', 'Moderate'),
         ('high', 'High')
@@ -33,7 +33,7 @@ class Pet(models.Model):
     gender = models.BooleanField(default=False, verbose_name="性別")  # 新增性別欄位
     is_neutered = models.BooleanField(default=False, verbose_name="是否結紮")  # 新增結紮欄位
     activity_level = models.CharField(max_length=10,
-                                      choices=ACTIVITY_LEVEL, default='Low')
+                                      choices=activity_level_option, default='Low')
     der = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="每日能量需求")  # der欄位
     image = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
@@ -73,4 +73,4 @@ class Record(models.Model):
 
 class FcmToken(models.Model):
     uid = models.ForeignKey(User, db_column="uid", on_delete=models.CASCADE, verbose_name='使用者ID')
-    token = models.CharField(max_length=255, null=True, blank=True, verbose_name="Fcm_Token")
+    token = models.CharField(max_length=255, default="", verbose_name="Fcm_Token")
