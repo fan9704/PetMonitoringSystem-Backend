@@ -128,6 +128,7 @@ pip freeze > requirements.txt
 ### Run Integration Test
 
 ```shell
+python manage.py test PetMonitoringSystemBackend.test [--verbosity 2]# Unit Test --verbosity 2 is output detail
 python manage.py test api.tests.unit [--verbosity 2]# Unit Test --verbosity 2 is output detail
 python manage.py test api.tests.integration #Intergration Test
 python manage.py test  #All Test
