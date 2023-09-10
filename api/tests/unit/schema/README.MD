@@ -1,19 +1,15 @@
-import logging
+# GraphQL Unittest
 
-from django.test.utils import TestCase
-from graphene.test import Client
+### django-graphene unittest
+
+> Test failed
+
+```python
 from graphene_django.utils.testing import GraphQLTestCase
-from PetMonitoringSystemBackend.schema import schema
-
-logger = logging.getLogger(__name__)
-
 
 class RecordTypeQLTestCase(GraphQLTestCase):
-    def setUp(self) -> None:
-        self.client = Client(schema)
-
     def test_record_type_query(self):
-        executed = self.client.execute(
+        response = self.query(
             '''
             query {
               allRecordType{
@@ -23,10 +19,12 @@ class RecordTypeQLTestCase(GraphQLTestCase):
             }
             ''',
         )
-        self.assertIsNotNone(executed)
+
+        self.assertResponseNoErrors(response)
+        self.assertEqual(response.status_code, 200)
 
     def test_record_type_mutation(self):
-        executed = self.client.execute(
+        response = self.query(
             '''
             mutation {
               createRecordType(recordTypeData: {type: "heartbeat"}) {
@@ -40,4 +38,5 @@ class RecordTypeQLTestCase(GraphQLTestCase):
             ''',
         )
 
-        self.assertIsNotNone(executed)
+        self.assertResponseNoErrors(response)
+```

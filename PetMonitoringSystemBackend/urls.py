@@ -60,6 +60,6 @@ urlpatterns = [
                   path('health/', include('health_check.urls')),
                   re_path(r'^static/(?P<path>.*)$', return_static, name='static'),
 
-                  path('graphql/', GraphQLView.as_view(graphiql=True)),
+                  path('graphql', GraphQLView.as_view(graphiql=True)),
                   
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

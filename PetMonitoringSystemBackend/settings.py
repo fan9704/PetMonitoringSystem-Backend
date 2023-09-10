@@ -272,6 +272,7 @@ REST_FRAMEWORK = {
 GRAPHENE = {
     'SCHEMA': 'PetMonitoringSystemBackend.schema.schema',
 }
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
