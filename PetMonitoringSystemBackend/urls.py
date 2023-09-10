@@ -20,7 +20,7 @@ from django.contrib.staticfiles.views import serve
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-# from django_prometheus import urls as prometheus_urls
+
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -61,6 +61,5 @@ urlpatterns = [
                   re_path(r'^static/(?P<path>.*)$', return_static, name='static'),
 
                   path('graphql/', GraphQLView.as_view(graphiql=True)),
-                  # path('forest/', include('django_forest.urls')),
-                  # path('metrics/', include(prometheus_urls))
+                  
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
