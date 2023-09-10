@@ -6,6 +6,7 @@ from api.models import RecordType
 class RecordTypeQL(DjangoObjectType):
     class Meta:
         model = RecordType
+        fields = "__all__"
 
 
 class RecordTypeDTO(graphene.InputObjectType):
