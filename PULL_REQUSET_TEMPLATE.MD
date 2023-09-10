@@ -1,6 +1,6 @@
-# PR Details
+# 拉取請求明細 PR Details
 
-## 描述/ Description
+## 描述 Description
 
 <!--- Describe your changes in detail -->
 <!--- 描述你這次的改動 -->
