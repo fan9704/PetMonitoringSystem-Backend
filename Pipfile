@@ -35,8 +35,8 @@ channels-redis = "==4.1.0"
 pillow = "==8.4.0"
 django-seed = "*"
 python-dotenv = "*"
-graphene-django = "*"
 python-json-logger = "*"
+graphene-django = "3.1.5"
 
 [dev-packages]
 

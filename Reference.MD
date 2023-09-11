@@ -62,9 +62,45 @@ Celery -A PetMonitoringSystemBackend worker -l info
 1. [Channels Chatroom](https://zhuanlan.zhihu.com/p/373801436)
 2. [Django Websockets: A Complete Beginners Guide!](https://esketchers.com/django-websockets-a-complete-beginners-guide/)
 
+----
+
 ### Django Grafana Prometheus
 
 1. [Implement Grafana Prometheus on Django](https://karanchuri.medium.com/prometheus-grafana-in-django-92da4d782f8a)
+
+#### Install Dependencies
+
+```shell
+pipenv install django-prometheus
+```
+
+#### Inject in Global Environment
+
+```python
+INSTALLED_APPS = [
+    'django_prometheus',
+]
+MIDDLEWARE= [
+    
+]
+MIDDLEWARE.insert(0, 'django_prometheus.middleware.PrometheusBeforeMiddleware')
+MIDDLEWARE += [
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
+]
+```
+
+#### Register Route in urls.py
+
+```python
+# PetMonitoringSystemBackend/urls.py
+from django.urls import path, include
+from django_prometheus import urls as prometheus_urls
+urlpatterns = [
+    path('metrics/', include(prometheus_urls))
+]
+```
+
+----
 
 ### Django Migration and Seed
 
@@ -73,6 +109,44 @@ Celery -A PetMonitoringSystemBackend worker -l info
 ### Django Image Upload
 
 1. [Uploading Images to Django REST Framework from Forms in React](https://dev.to/thomz/uploading-images-to-django-rest-framework-from-forms-in-react-3jhj)
+
+----
+
+### Django Forest Admin
+
+#### Install Dependencies
+
+```shell
+pipenv install django-forestadmin
+```
+
+#### Inject in Global Environment
+
+```python
+INSTALLED_APPS = [
+    "django_forest"
+]
+```
+
+#### Register Route in urls.py
+
+```python
+# PetMonitoringSystemBackend/urls.py
+from django.urls import path, include
+urlpatterns = [
+      path('forest/', include('django_forest.urls')),
+]
+```
+
+#### Init Forest Admin
+
+```python
+# PetMonitoringSystemBackend/wsgi.py
+from django_forest import init_forest
+init_forest()
+```
+
+----
 
 ### GitHub Actions
 
@@ -88,7 +162,7 @@ Celery -A PetMonitoringSystemBackend worker -l info
 
 1. [Install Python3 in Ubuntu](https://computingforgeeks.com/how-to-install-python-on-ubuntu-linux-system/)
 
-### Sonar Qube
+### SonarQube
 
 1. [Fix Container Hosting maximum memory problem](https://blog.csdn.net/weixin_39643007/article/details/108435139)
 

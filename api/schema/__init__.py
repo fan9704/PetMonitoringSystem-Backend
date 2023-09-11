@@ -1,7 +1,7 @@
 import graphene
 
 from api.models import RecordType
-from api.schema.RecordType import CreateRecordType, RecordTypeQL
+from api.schema.RecordTypeSchema import CreateRecordType, RecordTypeQL
 
 
 class Mutation(graphene.ObjectType):
@@ -9,10 +9,7 @@ class Mutation(graphene.ObjectType):
 
 
 class Query(graphene.ObjectType):
-    record_types = graphene.List(RecordTypeQL, type=graphene.String())
+    all_record_type = graphene.List(RecordTypeQL)
 
-    def resolve_record_types(self, info, **kwargs):
-        _type = kwargs.get('type')
-        if _type is not None:
-            return RecordType.objects.filter(type__contains=_type)
+    def resolve_all_record_type(self, info, **kwargs):
         return RecordType.objects.all()
