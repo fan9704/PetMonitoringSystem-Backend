@@ -33,9 +33,9 @@ class Pet(models.Model):
     gender = models.BooleanField(default=False, verbose_name="性別")  # 新增性別欄位
     is_neutered = models.BooleanField(default=False, verbose_name="是否結紮")  # 新增結紮欄位
     activity_level = models.CharField(max_length=10,
-                                      choices=activity_level_option, default='Low')
+                                      choices=activity_level_option, default='Low', verbose_name="寵物指標")
     der = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="每日能量需求")  # der欄位
-    image = models.ImageField(upload_to=upload_to, blank=True, null=True)
+    image = models.ImageField(upload_to=upload_to, blank=True, null=True, verbose_name="寵物圖片")
 
     # External Columns
     # chip_id = models.CharField(max_length=256,verbose_name="晶片編號")
