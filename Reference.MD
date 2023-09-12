@@ -62,6 +62,19 @@ Celery -A PetMonitoringSystemBackend worker -l info
 1. [Channels Chatroom](https://zhuanlan.zhihu.com/p/373801436)
 2. [Django Websockets: A Complete Beginners Guide!](https://esketchers.com/django-websockets-a-complete-beginners-guide/)
 
+---
+
+### Django GraphQL 
+
+#### Install Dependencies
+```shell
+pipenv install django-graphene
+```
+
+1. [django-graphene unittest](https://docs.graphene-python.org/projects/django/en/latest/testing/)
+1. [graphene unittest](https://docs.graphene-python.org/en/latest/testing/)
+1. [django-graphene setup](https://medium.com/@chiayinchen/django-graphql-%E5%88%9D%E9%AB%94%E9%A9%97-44b39aa55a2f)
+
 ----
 
 ### Django Grafana Prometheus
