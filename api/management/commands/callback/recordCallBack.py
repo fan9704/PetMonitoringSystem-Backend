@@ -16,13 +16,11 @@ def temperature_humidity_callback(topic: str, body: str, ch=None, method=None, p
     logger.info("[Temperature] Received " + str(data["Temperature"]))
     logger.info("[Humidity] Received " + str(data["Humidity"]))
     logger.debug(f'Topic:{topic} ch:{ch} properties:{properties} method:{method}')
-    # ch.basic_ack(delivery_tag=method.delivery_tag)
-    # machine = models.Machine.objects.get(name=data["machineId"])
 
     # Check for abnormal temperature
     temperature = float(data["Temperature"])
     if temperature > 27 or temperature < 20:
-        raise Exception("溫度異常")
+        raise ValueError("溫度異常")
 
     try:
         machine = models.Machine.objects.get(name=topic.split("/")[1])
@@ -53,9 +51,7 @@ def weight_callback(topic: str, body: str, ch=None, method=None, properties=None
 
     weight = float(data["Weight"])
     if weight < 0:
-        raise Exception("進食問題")
-
-    # ch.basic_ack(delivery_tag=method.delivery_tag)
+        raise ValueError("進食問題")
 
 
 def water_callback(topic: str, body: str, ch=None, method=None, properties=None):
@@ -65,5 +61,4 @@ def water_callback(topic: str, body: str, ch=None, method=None, properties=None)
 
     water = float(data["Water"])
     if water < 0:
-        raise Exception("攝取水量問題")
-    # ch.basic_ack(delivery_tag=method.delivery_tag)
+        raise ValueError("攝取水量問題")
