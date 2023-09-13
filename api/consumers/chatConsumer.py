@@ -9,16 +9,18 @@ logger = logging.getLogger(__name__)
 
 
 def get_ai_reply(message):
-    return f'Hi {message}'
-    # openai.api_key = os.getenv("CHATGPT_APIKEY", None)
-    # response = openai.Completion.create(
-    #     engine="davinci",
-    #     prompt=message,
-    #     max_tokens=5,
-    #     n=1,
-    #     stop=None,
-    # )
-    # return response['choices'][0]['text']
+    openai.api_key = os.getenv("CHATGPT_APIKEY", None)
+    if openai.api_key:
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt=message,
+            max_tokens=5,
+            n=1,
+            stop=None,
+        )
+        return response['choices'][0]['text']
+    else:
+        return f'Hi {message}'
 
 
 class ChatConsumer(AsyncWebsocketConsumer):

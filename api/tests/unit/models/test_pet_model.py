@@ -28,26 +28,23 @@ class PetModelTest(TestCase):
     def testPetName(self):
         self.assertEqual(self.cat1.name, "cat1")
         self.assertEqual(self.dog1.name, "dog1")
-        logger.debug("Complete Pet Name Model Test")
 
         self.assertEqual(self.cat1.keeper, self.u1)
         self.assertEqual(self.dog1.keeper, self.u1)
-        logger.debug("Complete Pet Keeper Model Test")
 
         self.assertEqual(self.cat1.type, self.cat_type)
         self.assertEqual(self.dog1.type, self.dog_type)
-        logger.debug("Complete Pet Type Model Test")
 
         self.assertEqual(self.cat1.birthday, datetime.date.today())
         self.assertEqual(self.dog1.birthday, datetime.date.today())
-        logger.debug("Complete Pet Birthday Model Test")
 
         self.assertEqual(self.cat1.content, "cat1")
         self.assertEqual(self.dog1.content, "dog1")
-        logger.debug("Complete Pet Content Model Test")
 
         self.assertEqual(str(self.cat1), f'{self.cat1.name}  照顧人:{self.cat1.keeper.username}:   寵物種類{self.cat1.type.typename}')
         self.assertEqual(str(self.dog1), f'{self.dog1.name}  照顧人:{self.dog1.keeper.username}:   寵物種類{self.dog1.type.typename}')
+
+        logger.debug("Complete Pet Model Test")
 
     def tearDown(self):
         Pet.objects.all().delete()
