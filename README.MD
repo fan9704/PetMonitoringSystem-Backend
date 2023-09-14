@@ -17,6 +17,10 @@
 
 [Django System Check](http://127.0.0.1:8000/health/)
 
+[Rabbit Console](http://127.0.0.1:15672/)
+
+[SonarQube Console](http://127.0.0.1:9000/)
+
 [Forest Admin](https://app.forestadmin.com/)
 
 ## Setup Project
@@ -27,7 +31,7 @@
 pipenv install
 ```
 
-### Step.2 Constructor Environments with Docker-compose
+### Step.2 Construct Environments with Docker-compose
 
 ```shell
 docker-compose up

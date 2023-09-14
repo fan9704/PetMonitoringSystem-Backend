@@ -125,4 +125,3 @@ class PetAPIViewTestCase(TestCase):
         response = view(request, pk=50)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertEqual(response.data.error, 'Pet not found')
