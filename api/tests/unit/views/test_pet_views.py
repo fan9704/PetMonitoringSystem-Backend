@@ -25,6 +25,12 @@ class PetAPIViewTestCase(TestCase):
         self.mouse_type = PetType.objects.create(typename="mouse", description="鼠")
         self.other_type = PetType.objects.create(typename="other", description="其他")
 
+        image = Image.new('RGB', (100, 100))
+        self.image_io = BytesIO()
+        image.save(self.image_io, 'JPEG')
+        self.image_io.seek(0)
+
+
     def tearDown(self) -> None:
         Pet.objects.all().delete()
         PetType.objects.all().delete()
@@ -102,16 +108,20 @@ class PetAPIViewTestCase(TestCase):
     def test_upload_pet_image(self):
         pet = Pet.objects.create(name="cat1", keeper=self.u1, type=self.cat_type, birthday=datetime.date.today(),
                                  content="cat1")
-        image = Image.new('RGB', (100, 100))
-        image_io = BytesIO()
-        image.save(image_io, 'JPEG')
-        image_io.seek(0)
-
         url = reverse('pet-upload-image', args=[pet.id])
-        request = self.factory.post(url, {'image': image_io}, format='multipart')
+        request = self.factory.post(url, {'image': self.image_io}, format='multipart')
 
         view = PetUploadImageAPIView.as_view()
         response = view(request, pk=pet.id)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response.data["image"])
+
+    def test_upload_pet_image_invalid(self):
+        url = reverse('pet-upload-image', args=[50])
+        request = self.factory.post(url, {'image': self.image_io}, format='multipart')
+
+        view = PetUploadImageAPIView.as_view()
+        response = view(request, pk=50)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
