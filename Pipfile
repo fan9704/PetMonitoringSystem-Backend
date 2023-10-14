@@ -37,6 +37,7 @@ django-seed = "*"
 python-dotenv = "*"
 python-json-logger = "*"
 graphene-django = "3.1.5"
+google-generativeai = "*"
 
 [dev-packages]
 

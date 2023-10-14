@@ -1,12 +1,10 @@
-from django.contrib import auth
 from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
-
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.serializers import UserSerializer
 
@@ -28,14 +26,12 @@ class LoginView(APIView):
         )
     )
     def post(self, request, *args, **kwargs):
-        refresh = None
         data = request.data
         username = data.get("username", "")
         password = data.get("password", "")
         user = authenticate(request, username=username, password=password)
         if user:
             refresh = RefreshToken.for_user(user)
-            auth.login(request, user)
             data = {
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
