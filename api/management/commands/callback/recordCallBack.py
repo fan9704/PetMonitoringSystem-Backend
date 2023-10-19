@@ -28,7 +28,7 @@ def temperature_humidity_callback(topic: str, body: str, ch=None, method=None, p
         '''
         notify("溫度異常", notify_content, 1)
     # Todo: 溫度異常
-    machine = models.Machine.objects.get_or_create(name=topic.split("/")[1])
+    machine, created = models.Machine.objects.get_or_create(name=topic.split("/")[1])
 
     temperature_record_type = models.RecordType.objects.get(type="temperature")
     humidity_record_type = models.RecordType.objects.get(type="humidity")
