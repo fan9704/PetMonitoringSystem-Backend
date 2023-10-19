@@ -1,6 +1,7 @@
 import json
 from api import models
 from api.management.commands.logger.commandLogger import CommandLogger
+from api.utils.notify import notify
 
 logger = CommandLogger(__name__).get_logger()
 
@@ -19,15 +20,16 @@ def temperature_humidity_callback(topic: str, body: str, ch=None, method=None, p
 
     # Check for abnormal temperature
     temperature = float(data["Temperature"])
+    humidity = float(data["Humidity"])
     if temperature > 27 or temperature < 20:
-        raise ValueError("溫度異常")
+        notify_content = f'''
+        [寵物環境溫度] {temperature}
+        [寵物環境濕度] {humidity}
+        '''
+        notify("溫度異常", notify_content, 1)
+    # Todo: 溫度異常
+    machine = models.Machine.objects.get_or_create(name=topic.split("/")[1])
 
-    try:
-        machine = models.Machine.objects.get(name=topic.split("/")[1])
-    except models.Machine.DoesNotExist:
-        machine = models.Machine.objects.create(
-            name=topic.split("/")[1]
-        )
     temperature_record_type = models.RecordType.objects.get(type="temperature")
     humidity_record_type = models.RecordType.objects.get(type="humidity")
     temperature = models.Record.objects.create(
@@ -51,7 +53,10 @@ def weight_callback(topic: str, body: str, ch=None, method=None, properties=None
 
     weight = float(data["Weight"])
     if weight < 0:
-        raise ValueError("進食問題")
+        notify_content = f'''
+        [寵物進食量] {weight}
+        '''
+        notify("進食過少", notify_content, 1)
 
 
 def water_callback(topic: str, body: str, ch=None, method=None, properties=None):
@@ -61,4 +66,7 @@ def water_callback(topic: str, body: str, ch=None, method=None, properties=None)
 
     water = float(data["Water"])
     if water < 0:
-        raise ValueError("攝取水量問題")
+        notify_content = f'''
+        [寵物喝水量] {water}
+        '''
+        notify("喝水過少", notify_content, 1)

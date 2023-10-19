@@ -10,14 +10,9 @@ def machine_callback(topic: str, body: str, ch=None, method=None, properties=Non
     logger.debug(f"Topic:{topic} CH:{ch} Method:{method} Properties:{properties}")
 
     content = json.loads(body)
-    try:
-        machine = Machine.objects.get(
-            name=content["machineId"]
-        )
-    except Machine.DoesNotExist:
-        machine = Machine.objects.create(
-            name=content["machineId"]
-        )
+    machine = Machine.objects.get_or_create(
+        name=content["machineId"]
+    )
     if content["onlineStatus"]:
         machine.onlineStatus = True
     else:
