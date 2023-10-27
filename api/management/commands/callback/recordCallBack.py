@@ -27,8 +27,7 @@ def temperature_humidity_callback(topic: str, body: str, ch=None, method=None, p
         [寵物環境濕度] {humidity}
         '''
         notify("溫度異常", notify_content, 1)
-    # Todo: 溫度異常
-    machine, created = models.Machine.objects.get_or_create(name=topic.split("/")[1])
+    machine, _ = models.Machine.objects.get_or_create(name=topic.split("/")[1])
 
     temperature_record_type = models.RecordType.objects.get(type="temperature")
     humidity_record_type = models.RecordType.objects.get(type="humidity")
@@ -50,6 +49,8 @@ def weight_callback(topic: str, body: str, ch=None, method=None, properties=None
     data = json.loads(body)
     logger.info("[Weight] Received " + str(data["Weight"]))
     logger.debug(f'Topic:{topic} ch:{ch} properties:{properties} method:{method}')
+    machine, _ = models.Machine.objects.get_or_create(name=topic.split("/")[1])
+    weight_record_type = models.RecordType.objects.get(type="weight")
 
     weight = float(data["Weight"])
     if weight < 0:
@@ -58,11 +59,20 @@ def weight_callback(topic: str, body: str, ch=None, method=None, properties=None
         '''
         notify("進食過少", notify_content, 1)
 
+    weight = models.Record.objects.create(
+        pet=machine.pet,
+        type=weight_record_type,
+        data=data["Weight"],
+    )
+    weight.save()
+
 
 def water_callback(topic: str, body: str, ch=None, method=None, properties=None):
     data = json.loads(body)
     logger.info("[Water] Received " + str(data["Water"]))
     logger.debug(f'Topic:{topic} ch:{ch} properties:{properties} method:{method}')
+    machine, _ = models.Machine.objects.get_or_create(name=topic.split("/")[1])
+    water_record_type = models.RecordType.objects.get(type="water")
 
     water = float(data["Water"])
     if water < 0:
@@ -70,3 +80,10 @@ def water_callback(topic: str, body: str, ch=None, method=None, properties=None)
         [寵物喝水量] {water}
         '''
         notify("喝水過少", notify_content, 1)
+
+    water = models.Record.objects.create(
+        pet=machine.pet,
+        type=water_record_type,
+        data=data["Water"],
+    )
+    water.save()
