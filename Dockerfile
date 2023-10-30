@@ -20,4 +20,14 @@ COPY sonar-project.properties /code/sonar-project.properties
 
 RUN pip install -r requirements.txt
 
-CMD ["daphne", "PetMonitoringSystemBackend.asgi:application", "--bind", "0.0.0.0", "--port", "8000"]
+# Django Run Environment
+
+ENV ENVIRONMENT=web
+
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "PetMonitoringSystemBackend.asgi:application"]
+
+# MQTT Listener Run Environment
+
+ENV ENVIRONMENT=worker
+
+CMD ["python3", "manage.py", "MQTTListener"]
