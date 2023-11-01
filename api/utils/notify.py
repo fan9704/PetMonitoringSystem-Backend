@@ -21,49 +21,29 @@ def get_user_token(user_id: int = None):
     try:
         if user_id is None:
             logger.warning("User ID is None")
+            return None
         else:
-            token = FcmToken.objects.select_related("uid").get(id=user_id).token
-            return token
-    except User.DoesNotExist:
-        logger.warning("User.DoesNotExist")
+            fcm = FcmToken.objects.select_related("uid").get(id=user_id)
+            return fcm.token
+    except FcmToken.DoesNotExist:
+        logger.warning("User/Token DoesNotExist")
+        return None
 
 
 def notify(title: str, body: str, user_id: int = None):
     token = get_user_token(user_id=user_id)
-    logger.info(token)
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title=title,
-            body=body
-        ),
-        data={
-            "petname": "Cat1"
-        },
-        token=token
-    )
-    response = messaging.send(message)
-    logger.info(f'Successfully sent message User:{user_id} Response:{response}')
-
-
-def http_notify(title: str, body: str):
-    FCM_API_KEY = "ya29.a0AbVbY6MSnYsqSopTQnm-TqfK0ixgIDOo1SdVxMcPWeKylVOET28z5DpWAi0zijymxs-OBzu5xGrD3p0qY1Ks1lN2P_Sxo9yaWG3aDNIlKsU9qc35ZxxvDSBR6vdlNApEBoNHo51Kf59jsQl2Nk5Q82-N3fXSaCgYKAfwSARMSFQFWKvPlpuxoXdVqHg-r3pEBsp-N3A0163"
-    FCM_TOKEN = os.getenv("FCM_DEVICE_TOKEN", None)
-
-    message = {
-        "message": {
-            "token": FCM_TOKEN,
-            "data": {
-                "body": body,
-                "title": title,
-                "key_1": "Value for key_1",
-                "key_2": "Value for key_2"
-            }
-        }
-    }
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {FCM_API_KEY}'
-    }
-    response = requests.post('https://fcm.googleapis.com/v1/projects/petmonitoringsystem-729da/messages:send',
-                             data=json.dumps(message), headers=headers)
-    print(response.text)
+    if token :
+        message = messaging.Message(
+            notification=messaging.Notification(
+                title=title,
+                body=body
+            ),
+            data={
+                "petname": "Cat1"
+            },
+            token=token
+        )
+        response = messaging.send(message)
+        logger.info(f'Successfully sent message User:{user_id} Response:{response}')
+    else:
+        logger.info(f'Token is invalid {token} User:{user_id}')

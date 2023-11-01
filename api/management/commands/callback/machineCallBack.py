@@ -10,7 +10,7 @@ def machine_callback(topic: str, body: str, ch=None, method=None, properties=Non
     logger.debug(f"Topic:{topic} CH:{ch} Method:{method} Properties:{properties}")
 
     content = json.loads(body)
-    machine = Machine.objects.get_or_create(
+    machine, _ = Machine.objects.get_or_create(
         name=content["machineId"]
     )
     if content["onlineStatus"]:

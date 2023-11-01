@@ -10,7 +10,7 @@ def upload_to(instance, filename):
 
 
 class PetType(models.Model):
-    typename = models.CharField(max_length=25, default="", verbose_name="寵物種類")
+    typename = models.CharField(max_length=255, default="", verbose_name="寵物種類")
     description = models.TextField(default="", verbose_name="寵物種類描述")
 
     def __str__(self):

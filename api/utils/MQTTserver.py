@@ -37,3 +37,6 @@ class MQTTClient:
 
     def loop_forever(self):
         self.client.loop_forever()
+
+    def loop_stop(self):
+        self.client.loop_stop()
