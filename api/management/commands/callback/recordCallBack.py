@@ -28,7 +28,8 @@ def temperature_humidity_callback(topic: str, body: str, ch=None, method=None, p
         '''
         notify("溫度異常", notify_content, 1)
     machine, _ = models.Machine.objects.get_or_create(name=topic.split("/")[1])
-
+    if machine.pet is None:
+        machine.pet = models.Pet.objects.get(pk=1)
     temperature_record_type = models.RecordType.objects.get(type="temperature")
     humidity_record_type = models.RecordType.objects.get(type="humidity")
     temperature = models.Record.objects.create(
